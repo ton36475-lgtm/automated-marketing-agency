@@ -9,6 +9,7 @@ import {
   Eye,
   Image,
   LayoutDashboard,
+  Link2,
   LogOut,
   Megaphone,
   Settings,
@@ -40,6 +41,7 @@ const NAV_ITEMS: NavItem[] = [
   { icon: Users, label: "CRM / LEADS", path: "/leads", color: "var(--neon-cyan)" },
   { icon: Eye, label: "COMPETITORS", path: "/competitors", color: "var(--neon-purple)" },
   { icon: BarChart3, label: "ANALYTICS", path: "/analytics", color: "var(--neon-yellow)" },
+  { icon: Link2, label: "INTEGRATIONS", path: "/integrations", color: "var(--neon-green)" },
   { icon: Settings, label: "SETTINGS", path: "/settings", color: "var(--neon-pink)" },
 ];
 

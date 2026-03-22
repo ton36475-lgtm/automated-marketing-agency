@@ -74,3 +74,21 @@
 - [ ] Content creation team
 - [ ] Marketing metrics dashboard
 - [ ] Real-time orchestration
+
+
+## Phase 7: HubSpot & Meta Ads Integration (v2.1)
+- [x] HubSpot OAuth Flow - Connect/disconnect HubSpot account
+- [ ] HubSpot Lead Sync - Sync contacts from HubSpot to platform
+- [ ] HubSpot Lead Scoring - AI-powered lead scoring with LLM
+- [ ] HubSpot Pipeline Management - Sync deal stages and automation
+- [x] Meta Ads OAuth Flow - Connect/disconnect Meta Ad Account
+- [ ] Meta Ads Campaign CRUD - Create, read, update, delete campaigns
+- [ ] Meta Ads Budget Management - Set and adjust daily/lifetime budgets
+- [ ] Meta Ads Bidding Strategy - Configure bid strategies (CPC, CPM, ROAS)
+- [ ] Meta Ads Performance Metrics - Pull impressions, clicks, conversions, ROAS
+- [x] Integration Settings UI - Dashboard for managing connections
+- [ ] Lead Sync Scheduler - Auto-sync leads on schedule
+- [ ] Campaign Sync Scheduler - Auto-sync campaign results
+- [ ] Webhook Handlers - Handle HubSpot/Meta webhooks
+- [ ] Error Handling & Retry Logic - Robust error handling for API calls
+- [ ] Integration Tests - Test OAuth flows and API integrations

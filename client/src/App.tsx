@@ -16,6 +16,7 @@ import Leads from "./pages/Leads";
 import Competitors from "./pages/Competitors";
 import Analytics from "./pages/Analytics";
 import SettingsPage from "./pages/Settings";
+import IntegrationSettings from "./pages/IntegrationSettings";
 
 function Router() {
   return (
@@ -31,6 +32,7 @@ function Router() {
       <Route path="/competitors" component={Competitors} />
       <Route path="/analytics" component={Analytics} />
       <Route path="/settings" component={SettingsPage} />
+      <Route path="/integrations" component={IntegrationSettings} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

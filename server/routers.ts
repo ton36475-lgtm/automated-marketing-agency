@@ -13,6 +13,7 @@ import {
   runStrategyAgent,
   runVisualAgent,
 } from "./agentEngine";
+import { integrationRouter as oauthIntegrationRouter } from "./routers/integrationRouter";
 import {
   createAdCreative,
   createCampaign,
@@ -410,6 +411,9 @@ const integrationRouter = router({
     .mutation(async ({ ctx, input }) => {
       await upsertIntegrationSettings({ ...input, userId: ctx.user.id });
     }),
+  
+  // OAuth routes
+  oauth: oauthIntegrationRouter,
 });
 
 // ─── App Router ───────────────────────────────────────────────────────────────
