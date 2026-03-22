@@ -1,48 +1,76 @@
-# AI Marketing Automation Platform - TODO
+# AI Marketing Automation Platform - TODO (v2.0)
 
-## Database & Backend
-- [x] Database schema: campaigns, agents, agent_tasks, leads, ad_creatives, analytics_metrics, competitor_data, notifications
-- [x] Backend routers: campaigns, agents, leads, analytics, creatives, competitors
-- [x] Multi-Agent Engine: orchestrator logic, task queue, agent status management
-- [x] LLM Integration for all 5 agents
-- [x] Image Generation Integration (Visual Agent)
-- [ ] HubSpot CRM API integration (leads sync, scoring, pipeline)
-- [ ] Meta Marketing API integration (campaigns, budget, metrics)
+## Phase 1: UI/UX & Database Updates
+- [x] Change UI theme from Cyberpunk to Clean Minimal (White/Gray/Blue)
+- [x] Redesign all pages with clean, minimal aesthetic
+- [x] Update database schema for new features (Webhooks, Schedules, Content Creation)
+- [x] Add tables: webhooks, scheduled_tasks, content_library, video_generation_jobs, metrics_tracking
 
-## Frontend - Cyberpunk UI
-- [x] Global Cyberpunk theme (CSS variables, neon colors, glow effects)
-- [x] DashboardLayout with cyberpunk sidebar
-- [x] Main Dashboard page (overview stats, agent status, campaign performance)
-- [x] Strategy Agent page (market analysis, KPI goals, campaign planning)
-- [x] Copywriting Agent page (ad copy generation, content library)
-- [x] Visual Agent page (AI image generation, creative assets)
-- [x] Media Buying Agent page (budget management, Meta Ads control)
-- [x] Optimization Agent page (ROAS analysis, automated rules, scaling)
-- [x] CRM / Leads page (lead list, scoring, pipeline management)
-- [x] Competitor Analysis page (competitor tracking, insights)
-- [x] Campaign Manager page (create/manage campaigns end-to-end)
-- [x] Analytics & Reports page (performance metrics, charts)
-- [x] Settings page (API keys, integrations, agent configuration)
-- [ ] Real-time agent activity feed / notifications
+## Phase 2: Autonomous Scheduler & Triggers
+- [x] Create Autonomous Scheduler (cron-based task execution)
+- [x] Implement Webhook/API Trigger System
+- [ ] Build Schedule Management UI
+- [ ] Add trigger conditions and actions
+- [ ] Implement queue system for scheduled tasks
+- [ ] Real-time status monitoring for scheduled tasks
 
-## Agent Features
-- [x] Strategy Agent: market research, ICP analysis, KPI setting, campaign brief generation
-- [x] Copywriting Agent: ad copy, headlines, CTAs, A/B variants, multi-platform formats
-- [x] Visual Agent: AI image generation, brand guidelines, batch creative production
-- [x] Media Buying Agent: campaign creation, audience targeting, budget allocation, bid strategy
-- [x] Optimization Agent: ROAS monitoring, automated budget rules (Stop Loss, Scale Winners, Aggressive Scaling, Ad Fatigue)
-- [x] Orchestrator: multi-agent workflow coordination, task handoff, status tracking
+## Phase 3: Content Creation Team
+- [x] Add Video Generation Agent (AI video creation)
+- [x] Add Image Generation Agent (AI image creation with brand guidelines)
+- [x] Create Content Library management system
+- [ ] Implement batch content generation
+- [ ] Add content approval workflow
+- [ ] Content version control and rollback
 
-## Integrations
-- [ ] HubSpot CRM: contact sync, lead scoring, pipeline automation
-- [ ] Meta Marketing API: campaign CRUD, budget management, performance metrics
-- [ ] Competitor analysis: web scraping / search API for competitor insights
+## Phase 4: Marketing Metrics & Analytics
+- [ ] Build comprehensive Marketing Metrics Dashboard
+- [ ] Add Ad Performance tracking (CTR, CPC, ROAS, Conversion Rate)
+- [ ] Implement Attribution modeling
+- [ ] Create Real-time Performance Alerts
+- [ ] Add Competitor benchmarking
+- [ ] Build Custom Report Builder
+- [ ] Export metrics (PDF, CSV, Excel)
+
+## Phase 5: Real-time Orchestration & AI Decision Making
+- [x] Implement Real-time Agent Orchestration
+- [x] Build AI-driven Decision Making Engine
+- [x] Create Agent Communication Protocol
+- [x] Implement Multi-Agent Workflow Coordination
+- [ ] Add dynamic task prioritization
+- [ ] Build agent conflict resolution system
+- [ ] Implement feedback loops for continuous optimization
+
+## Phase 6: Autonomous Mode & Full Automation
+- [ ] Enable Autonomous Mode (agents work without user clicks)
+- [ ] Implement auto-scaling based on performance
+- [ ] Create automated budget allocation
+- [ ] Build auto-optimization rules
+- [ ] Implement predictive analytics
+- [ ] Add anomaly detection and alerts
+- [ ] Create automated A/B testing
+
+## Integrations (Pending)
+- [ ] HubSpot CRM API integration
+- [ ] Meta Marketing API integration
+- [ ] Google Ads API integration
+- [ ] Webhook endpoints for external systems
 
 ## Testing & Deployment
-- [ ] Unit tests for agent routers
-- [ ] Unit tests for campaign management
-- [ ] Unit tests for lead scoring logic
-- [ ] End-to-end testing of Multi-Agent workflow
-- [ ] Performance testing and optimization
+- [ ] Unit tests for all new features
+- [ ] Integration tests for autonomous workflows
+- [ ] End-to-end testing
+- [ ] Performance testing
+- [ ] Load testing for real-time orchestration
+- [ ] Security testing
 
-
+## Current Status
+- [x] Database schema v1 (10 tables)
+- [x] Backend API with 7 agents
+- [x] Frontend pages (11 pages)
+- [x] Cyberpunk UI theme
+- [x] Basic campaign management
+- [ ] Clean Minimal UI redesign (IN PROGRESS)
+- [ ] Autonomous scheduler
+- [ ] Content creation team
+- [ ] Marketing metrics dashboard
+- [ ] Real-time orchestration

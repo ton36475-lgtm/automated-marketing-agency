@@ -1,4 +1,7 @@
 import { trpc } from "@/lib/trpc";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Activity,
   Bot,
@@ -11,155 +14,30 @@ import {
   TrendingUp,
   Users,
   Zap,
+  Clock,
+  AlertCircle,
 } from "lucide-react";
 import { useMemo } from "react";
 import { Link } from "wouter";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
-type IconComponent = React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
-
-const AGENT_CARDS: Array<{
-  type: string;
-  label: string;
-  icon: IconComponent;
-  color: string;
-  desc: string;
-  path: string;
-}> = [
-  {
-    type: "strategy",
-    label: "Strategy Agent",
-    icon: Brain,
-    color: "var(--neon-purple)",
-    desc: "Market analysis & campaign planning",
-    path: "/strategy",
-  },
-  {
-    type: "copywriting",
-    label: "Copywriting Agent",
-    icon: Zap,
-    color: "var(--neon-yellow)",
-    desc: "Ad copy & content generation",
-    path: "/copywriting",
-  },
-  {
-    type: "visual",
-    label: "Visual Agent",
-    icon: Image,
-    color: "var(--neon-cyan)",
-    desc: "AI image & creative generation",
-    path: "/visual",
-  },
-  {
-    type: "media_buying",
-    label: "Media Buying Agent",
-    icon: ShoppingCart,
-    color: "var(--neon-pink)",
-    desc: "Budget & ad placement management",
-    path: "/media-buying",
-  },
-  {
-    type: "optimization",
-    label: "Optimization Agent",
-    icon: TrendingUp,
-    color: "var(--neon-green)",
-    desc: "ROAS analysis & automated scaling",
-    path: "/optimization",
-  },
+const AGENT_CARDS = [
+  { type: "strategy", label: "Strategy Agent", icon: Brain, desc: "Market analysis & campaign planning", path: "/strategy" },
+  { type: "copywriting", label: "Copywriting Agent", icon: Zap, desc: "Ad copy & content generation", path: "/copywriting" },
+  { type: "visual", label: "Visual Agent", icon: Image, desc: "AI image & creative generation", path: "/visual" },
+  { type: "media_buying", label: "Media Buying Agent", icon: ShoppingCart, desc: "Budget & ad placement", path: "/media-buying" },
+  { type: "optimization", label: "Optimization Agent", icon: TrendingUp, desc: "ROAS analysis & scaling", path: "/optimization" },
 ];
 
-function StatCard({
-  label,
-  value,
-  icon: Icon,
-  color,
-  sub,
-}: {
-  label: string;
-  value: string | number;
-  icon: IconComponent;
-  color: string;
-  sub?: string;
-}) {
-  return (
-    <div
-      className="cyber-card rounded-sm p-4 relative"
-      style={{ borderColor: `${color}30` }}
-    >
-      <div
-        className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: `linear-gradient(90deg, transparent, ${color}, transparent)`, opacity: 0.6 }}
-      />
-      <div className="flex items-start justify-between">
-        <div>
-          <div className="font-mono-tech text-xs mb-2" style={{ color: "oklch(0.45 0.04 220)" }}>
-            {label}
-          </div>
-          <div className="font-orbitron text-2xl font-bold" style={{ color }}>
-            {value}
-          </div>
-          {sub && (
-            <div className="font-mono-tech text-xs mt-1" style={{ color: "oklch(0.45 0.04 220)" }}>
-              {sub}
-            </div>
-          )}
-        </div>
-        <div
-          className="p-2 rounded-sm"
-          style={{ background: `${color}15`, border: `1px solid ${color}30` }}
-        >
-          <Icon className="w-5 h-5" style={{ color }} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function AgentStatusCard({
-  agent,
-}: {
-  agent: (typeof AGENT_CARDS)[0];
-}) {
-  return (
-    <Link href={agent.path}>
-      <div
-        className="cyber-card rounded-sm p-4 cursor-pointer transition-all duration-200 group"
-        style={{ borderColor: `${agent.color}20` }}
-        onMouseEnter={(e) => {
-          (e.currentTarget as HTMLElement).style.borderColor = `${agent.color}60`;
-          (e.currentTarget as HTMLElement).style.boxShadow = `0 0 20px ${agent.color}15`;
-        }}
-        onMouseLeave={(e) => {
-          (e.currentTarget as HTMLElement).style.borderColor = `${agent.color}20`;
-          (e.currentTarget as HTMLElement).style.boxShadow = "none";
-        }}
-      >
-        <div className="flex items-center gap-3 mb-3">
-          <div
-            className="p-2 rounded-sm"
-            style={{ background: `${agent.color}15`, border: `1px solid ${agent.color}30` }}
-          >
-            <agent.icon className="w-4 h-4" style={{ color: agent.color }} />
-          </div>
-          <div>
-            <div className="font-orbitron text-xs font-bold" style={{ color: agent.color }}>
-              {agent.label.toUpperCase()}
-            </div>
-          </div>
-          <div className="ml-auto status-dot-idle" />
-        </div>
-        <p className="font-mono-tech text-xs" style={{ color: "oklch(0.45 0.04 220)" }}>
-          {agent.desc}
-        </p>
-        <div
-          className="mt-3 text-xs font-orbitron tracking-wider"
-          style={{ color: `${agent.color}80` }}
-        >
-          [ ACTIVATE → ]
-        </div>
-      </div>
-    </Link>
-  );
-}
+const chartData = [
+  { name: "Mon", impressions: 4000, clicks: 240, conversions: 24 },
+  { name: "Tue", impressions: 3000, clicks: 221, conversions: 29 },
+  { name: "Wed", impressions: 2000, clicks: 229, conversions: 20 },
+  { name: "Thu", impressions: 2780, clicks: 200, conversions: 21 },
+  { name: "Fri", impressions: 1890, clicks: 229, conversions: 22 },
+  { name: "Sat", impressions: 2390, clicks: 200, conversions: 25 },
+  { name: "Sun", impressions: 3490, clicks: 210, conversions: 20 },
+];
 
 export default function Dashboard() {
   const { data: stats, isLoading: statsLoading } = trpc.analytics.dashboard.useQuery();
@@ -168,191 +46,242 @@ export default function Dashboard() {
   const { data: campaigns } = trpc.campaign.list.useQuery();
 
   const recentActivity = useMemo(() => activityLog?.slice(0, 8) || [], [activityLog]);
-
-  const activeCampaigns = useMemo(
-    () => campaigns?.filter((c) => c.status === "active") || [],
-    [campaigns]
-  );
+  const activeCampaigns = useMemo(() => campaigns?.filter((c) => c.status === "active") || [], [campaigns]);
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <div className="font-orbitron text-xs tracking-widest mb-1" style={{ color: "oklch(0.4 0.03 220)" }}>
-            ◈ SYSTEM OVERVIEW
-          </div>
-          <h1 className="font-orbitron text-2xl font-black text-gradient-pink-cyan">
-            COMMAND CENTER
-          </h1>
+    <div className="min-h-screen bg-background">
+      <div className="container-safe py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-foreground mb-2">Dashboard</h1>
+          <p className="text-muted-foreground">Overview of your marketing automation platform</p>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="status-dot-active" />
-          <span className="font-mono-tech text-xs" style={{ color: "var(--neon-green)" }}>
-            ALL SYSTEMS ONLINE
-          </span>
-        </div>
-      </div>
 
-      {/* Stats Row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard
-          label="TOTAL CAMPAIGNS"
-          value={statsLoading ? "..." : (stats?.totalCampaigns ?? 0)}
-          icon={Megaphone}
-          color="var(--neon-pink)"
-          sub={`${stats?.activeCampaigns ?? 0} active`}
-        />
-        <StatCard
-          label="TOTAL LEADS"
-          value={statsLoading ? "..." : (stats?.totalLeads ?? 0)}
-          icon={Users}
-          color="var(--neon-cyan)"
-        />
-        <StatCard
-          label="AGENT TASKS"
-          value={statsLoading ? "..." : (stats?.totalTasks ?? 0)}
-          icon={Bot}
-          color="var(--neon-purple)"
-          sub={`${stats?.completedTasks ?? 0} completed`}
-        />
-        <StatCard
-          label="SUCCESS RATE"
-          value={
-            stats && stats.totalTasks > 0
-              ? `${Math.round((stats.completedTasks / stats.totalTasks) * 100)}%`
-              : "N/A"
-          }
-          icon={CheckCircle}
-          color="var(--neon-green)"
-        />
-      </div>
-
-      {/* Agent Grid */}
-      <div>
-        <div className="font-orbitron text-xs tracking-widest mb-3" style={{ color: "oklch(0.4 0.03 220)" }}>
-          ◈ ACTIVE AGENTS
+        {/* Key Metrics */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <MetricCard
+            title="Total Campaigns"
+            value={statsLoading ? "..." : stats?.totalCampaigns ?? 0}
+            icon={Megaphone}
+            trend={`${stats?.activeCampaigns ?? 0} active`}
+          />
+          <MetricCard
+            title="Total Leads"
+            value={statsLoading ? "..." : stats?.totalLeads ?? 0}
+            icon={Users}
+            trend="↑ 12% this week"
+          />
+          <MetricCard
+            title="Agent Tasks"
+            value={statsLoading ? "..." : stats?.totalTasks ?? 0}
+            icon={Bot}
+            trend={`${stats?.completedTasks ?? 0} completed`}
+          />
+          <MetricCard
+            title="Success Rate"
+            value={stats && stats.totalTasks > 0 ? `${Math.round((stats.completedTasks / stats.totalTasks) * 100)}%` : "N/A"}
+            icon={CheckCircle}
+            trend="On track"
+          />
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
-          {AGENT_CARDS.map((agent) => (
-            <AgentStatusCard key={agent.type} agent={agent} />
-          ))}
-        </div>
-      </div>
 
-      {/* Bottom Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Activity */}
-        <div className="cyber-card rounded-sm p-4">
-          <div className="flex items-center gap-2 mb-4">
-            <Activity className="w-4 h-4" style={{ color: "var(--neon-cyan)" }} />
-            <span className="font-orbitron text-xs tracking-wider" style={{ color: "var(--neon-cyan)" }}>
-              AGENT ACTIVITY LOG
-            </span>
-          </div>
-          <div className="space-y-2 max-h-64 overflow-y-auto">
-            {recentActivity.length === 0 ? (
-              <div className="font-mono-tech text-xs text-center py-8" style={{ color: "oklch(0.35 0.03 220)" }}>
-                NO ACTIVITY RECORDED
-              </div>
-            ) : (
-              recentActivity.map((log) => {
-                const levelColor =
-                  log.level === "success"
-                    ? "var(--neon-green)"
-                    : log.level === "error"
-                    ? "var(--neon-pink)"
-                    : log.level === "warning"
-                    ? "var(--neon-yellow)"
-                    : "var(--neon-cyan)";
-                return (
-                  <div
-                    key={log.id}
-                    className="flex items-start gap-2 py-1.5 border-b"
-                    style={{ borderColor: "var(--dark-border)" }}
-                  >
-                    <div
-                      className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0"
-                      style={{ background: levelColor, boxShadow: `0 0 4px ${levelColor}` }}
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="font-mono-tech text-xs truncate" style={{ color: "oklch(0.75 0.05 200)" }}>
-                        [{log.agentType.toUpperCase()}] {log.action}
-                      </div>
-                      <div className="font-mono-tech text-xs" style={{ color: "oklch(0.35 0.03 220)" }}>
-                        {new Date(log.createdAt).toLocaleTimeString()}
-                      </div>
-                    </div>
+        {/* Charts Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          {/* Performance Chart */}
+          <Card className="lg:col-span-2 p-6">
+            <h2 className="text-lg font-semibold mb-4 text-foreground">Weekly Performance</h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis dataKey="name" stroke="#9ca3af" />
+                <YAxis stroke="#9ca3af" />
+                <Tooltip contentStyle={{ backgroundColor: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: "8px" }} />
+                <Legend />
+                <Line type="monotone" dataKey="impressions" stroke="#3b82f6" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="clicks" stroke="#10b981" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="conversions" stroke="#8b5cf6" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </Card>
+
+          {/* Agent Status */}
+          <Card className="p-6">
+            <h2 className="text-lg font-semibold mb-4 text-foreground">Agent Status</h2>
+            <div className="space-y-2">
+              {AGENT_CARDS.map((agent) => (
+                <div key={agent.type} className="flex items-center justify-between p-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-green-500" />
+                    <span className="text-sm font-medium text-foreground">{agent.label}</span>
                   </div>
-                );
-              })
-            )}
+                  <Badge variant="default" className="text-xs">Active</Badge>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
+
+        {/* Agents Grid */}
+        <div className="mb-8">
+          <h2 className="text-lg font-semibold mb-4 text-foreground">Active Agents</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            {AGENT_CARDS.map((agent) => {
+              const Icon = agent.icon;
+              return (
+                <Link key={agent.type} href={agent.path}>
+                  <Card className="p-4 hover:border-primary transition-all cursor-pointer h-full">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                        <Icon className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <div className="w-2 h-2 rounded-full bg-green-500" />
+                    </div>
+                    <h3 className="font-semibold text-sm text-foreground mb-1">{agent.label}</h3>
+                    <p className="text-xs text-muted-foreground">{agent.desc}</p>
+                  </Card>
+                </Link>
+              );
+            })}
           </div>
+        </div>
+
+        {/* Automation & Activity */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Scheduled Tasks */}
+          <Card className="p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Clock className="w-5 h-5 text-blue-600" />
+              <h2 className="text-lg font-semibold text-foreground">Scheduled Tasks</h2>
+            </div>
+            <div className="space-y-3">
+              <ScheduleItem title="Daily Campaign Optimization" time="8:00 AM" status="active" />
+              <ScheduleItem title="Lead Scoring Update" time="12:00 PM" status="active" />
+              <ScheduleItem title="Performance Report" time="6:00 PM" status="scheduled" />
+            </div>
+            <Button className="w-full mt-4" variant="outline">Add Schedule</Button>
+          </Card>
+
+          {/* Recent Activity */}
+          <Card className="p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Activity className="w-5 h-5 text-blue-600" />
+              <h2 className="text-lg font-semibold text-foreground">Recent Activity</h2>
+            </div>
+            <div className="space-y-3 max-h-64 overflow-y-auto">
+              {recentActivity.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-4">No activity yet</p>
+              ) : (
+                recentActivity.map((log) => (
+                  <ActivityItem key={log.id} title={`[${log.agentType}] ${log.action}`} time={new Date(log.createdAt).toLocaleTimeString()} type={log.level} />
+                ))
+              )}
+            </div>
+          </Card>
         </div>
 
         {/* Active Campaigns */}
-        <div className="cyber-card rounded-sm p-4">
+        <Card className="p-6 mb-8">
           <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <Target className="w-4 h-4" style={{ color: "var(--neon-pink)" }} />
-              <span className="font-orbitron text-xs tracking-wider" style={{ color: "var(--neon-pink)" }}>
-                ACTIVE CAMPAIGNS
-              </span>
-            </div>
+            <h2 className="text-lg font-semibold text-foreground">Active Campaigns</h2>
             <Link href="/campaigns">
-              <span className="font-mono-tech text-xs cursor-pointer" style={{ color: "oklch(0.4 0.03 220)" }}>
-                VIEW ALL →
-              </span>
+              <Button variant="ghost" size="sm">View All</Button>
             </Link>
           </div>
-          <div className="space-y-2 max-h-64 overflow-y-auto">
-            {activeCampaigns.length === 0 ? (
-              <div className="text-center py-8">
-                <div className="font-mono-tech text-xs mb-3" style={{ color: "oklch(0.35 0.03 220)" }}>
-                  NO ACTIVE CAMPAIGNS
-                </div>
-                <Link href="/campaigns">
-                  <div
-                    className="inline-block px-4 py-2 font-orbitron text-xs tracking-wider cursor-pointer transition-all"
-                    style={{ border: "1px solid var(--neon-pink)", color: "var(--neon-pink)" }}
-                    onMouseEnter={(e) =>
-                      ((e.currentTarget as HTMLElement).style.background = "rgba(255,45,120,0.1)")
-                    }
-                    onMouseLeave={(e) =>
-                      ((e.currentTarget as HTMLElement).style.background = "transparent")
-                    }
-                  >
-                    [ CREATE CAMPAIGN ]
+          {activeCampaigns.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground mb-4">No active campaigns</p>
+              <Link href="/campaigns">
+                <Button>Create Campaign</Button>
+              </Link>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {activeCampaigns.map((campaign) => (
+                <Card key={campaign.id} className="p-4">
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="font-semibold text-foreground">{campaign.name}</h3>
+                    <Badge>Active</Badge>
                   </div>
-                </Link>
-              </div>
-            ) : (
-              activeCampaigns.map((campaign) => (
-                <div
-                  key={campaign.id}
-                  className="flex items-center justify-between py-2 border-b"
-                  style={{ borderColor: "var(--dark-border)" }}
-                >
-                  <div>
-                    <div className="font-orbitron text-xs" style={{ color: "oklch(0.85 0.05 200)" }}>
-                      {campaign.name}
-                    </div>
-                    <div className="font-mono-tech text-xs" style={{ color: "oklch(0.4 0.03 220)" }}>
-                      {campaign.objective || "General"}
-                    </div>
+                  <p className="text-sm text-muted-foreground mb-3">{campaign.objective}</p>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">Budget: ${campaign.budget}</span>
+                    <span className="text-muted-foreground">Spent: ${campaign.budgetSpent}</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="status-dot-active" />
-                    <span className="font-mono-tech text-xs" style={{ color: "var(--neon-green)" }}>
-                      LIVE
-                    </span>
-                  </div>
-                </div>
-              ))
-            )}
+                </Card>
+              ))}
+            </div>
+          )}
+        </Card>
+
+        {/* Quick Actions */}
+        <Card className="p-6">
+          <h2 className="text-lg font-semibold text-foreground mb-4">Quick Actions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
+            <Link href="/campaigns">
+              <Button variant="outline" className="w-full">Create Campaign</Button>
+            </Link>
+            <Link href="/analytics">
+              <Button variant="outline" className="w-full">View Analytics</Button>
+            </Link>
+            <Link href="/leads">
+              <Button variant="outline" className="w-full">Manage Leads</Button>
+            </Link>
+            <Link href="/strategy">
+              <Button variant="outline" className="w-full">Configure Agents</Button>
+            </Link>
+            <Link href="/settings">
+              <Button variant="outline" className="w-full">Settings</Button>
+            </Link>
           </div>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+function MetricCard({ title, value, icon: Icon, trend }: any) {
+  return (
+    <Card className="p-6">
+      <div className="flex items-start justify-between mb-4">
+        <div>
+          <p className="text-sm text-muted-foreground mb-1">{title}</p>
+          <p className="text-3xl font-bold text-foreground">{value}</p>
+        </div>
+        <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+          <Icon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
         </div>
       </div>
+      <p className="text-xs text-green-600 dark:text-green-400">↑ {trend}</p>
+    </Card>
+  );
+}
+
+function ScheduleItem({ title, time, status }: any) {
+  return (
+    <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+      <div>
+        <p className="text-sm font-medium text-foreground">{title}</p>
+        <p className="text-xs text-muted-foreground">{time}</p>
+      </div>
+      <Badge variant={status === "active" ? "default" : "secondary"} className="text-xs">
+        {status}
+      </Badge>
+    </div>
+  );
+}
+
+function ActivityItem({ title, time, type }: any) {
+  const typeClasses: Record<string, string> = {
+    success: "bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-300",
+    warning: "bg-orange-50 text-orange-700 dark:bg-orange-900/20 dark:text-orange-300",
+    error: "bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-300",
+    info: "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300",
+  };
+
+  return (
+    <div className={`p-3 rounded-lg ${typeClasses[type] || typeClasses.info}`}>
+      <p className="text-sm font-medium">{title}</p>
+      <p className="text-xs opacity-75">{time}</p>
     </div>
   );
 }

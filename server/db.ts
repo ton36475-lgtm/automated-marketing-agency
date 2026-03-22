@@ -7,6 +7,7 @@ import {
   analyticsMetrics,
   campaigns,
   competitorData,
+  contentLibrary,
   InsertAdCreative,
   InsertAgentActivityLog,
   InsertAgentTask,
@@ -19,8 +20,13 @@ import {
   InsertUser,
   integrationSettings,
   leads,
+  metricsTracking,
   optimizationRules,
+  orchestrationState,
+  scheduledTasks,
   users,
+  videoGenerationJobs,
+  webhooks,
 } from "../drizzle/schema";
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -292,4 +298,111 @@ export async function upsertIntegrationSettings(data: InsertIntegrationSettings)
   delete updateSet.id;
   delete updateSet.userId;
   await db.insert(integrationSettings).values(data).onDuplicateKeyUpdate({ set: updateSet });
+}
+
+// ─── Scheduled Tasks ──────────────────────────────────────────────────────────
+export async function createScheduledTask(data: any) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  return db.insert(scheduledTasks).values(data);
+}
+
+export async function getScheduledTasks(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(scheduledTasks).where(eq(scheduledTasks.userId, userId));
+}
+
+export async function updateScheduledTask(id: number, data: any) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  return db.update(scheduledTasks).set(data).where(eq(scheduledTasks.id, id));
+}
+
+// ─── Webhooks ─────────────────────────────────────────────────────────────────
+export async function createWebhook(data: any) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  return db.insert(webhooks).values(data);
+}
+
+export async function getWebhooks(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(webhooks).where(eq(webhooks.userId, userId));
+}
+
+export async function deleteWebhook(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  return db.delete(webhooks).where(eq(webhooks.id, id));
+}
+
+// ─── Content Library ──────────────────────────────────────────────────────────
+export async function createContentLibraryItem(data: any) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  return db.insert(contentLibrary).values(data);
+}
+
+export async function getContentLibrary(userId: number, campaignId?: number) {
+  const db = await getDb();
+  if (!db) return [];
+  if (campaignId) {
+    return db
+      .select()
+      .from(contentLibrary)
+      .where(eq(contentLibrary.userId, userId));
+  }
+  return db.select().from(contentLibrary).where(eq(contentLibrary.userId, userId));
+}
+
+// ─── Video Generation Jobs ────────────────────────────────────────────────────
+export async function createVideoJob(data: any) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  return db.insert(videoGenerationJobs).values(data);
+}
+
+export async function getVideoJobs(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(videoGenerationJobs).where(eq(videoGenerationJobs.userId, userId));
+}
+
+export async function updateVideoJob(id: number, data: any) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  return db.update(videoGenerationJobs).set(data).where(eq(videoGenerationJobs.id, id));
+}
+
+// ─── Metrics Tracking ─────────────────────────────────────────────────────────
+export async function createMetricsRecord(data: any) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  return db.insert(metricsTracking).values(data);
+}
+
+export async function getMetrics(campaignId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(metricsTracking).where(eq(metricsTracking.campaignId, campaignId));
+}
+
+// ─── Orchestration State ──────────────────────────────────────────────────────
+export async function getOrchestrationState(campaignId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db
+    .select()
+    .from(orchestrationState)
+    .where(eq(orchestrationState.campaignId, campaignId))
+    .limit(1);
+  return result[0] || null;
+}
+
+export async function updateOrchestrationStateData(campaignId: number, data: any) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  return db.update(orchestrationState).set(data).where(eq(orchestrationState.campaignId, campaignId));
 }

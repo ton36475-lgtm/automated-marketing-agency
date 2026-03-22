@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import url("https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Share+Tech+Mono&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap");
 
 @custom-variant dark (&:is(.dark *));
 
@@ -44,66 +44,93 @@
 }
 
 :root {
-  /* Cyberpunk Neon Theme */
-  --neon-pink: #ff2d78;
-  --neon-cyan: #00f5ff;
-  --neon-green: #39ff14;
-  --neon-yellow: #ffff00;
-  --neon-purple: #bf5fff;
-  --dark-bg: #050510;
-  --dark-card: #0a0a1a;
-  --dark-border: #1a1a3a;
-
-  --radius: 0.25rem;
-  --background: oklch(0.06 0.01 260);
-  --foreground: oklch(0.95 0.02 200);
-  --card: oklch(0.09 0.015 260);
-  --card-foreground: oklch(0.95 0.02 200);
-  --popover: oklch(0.08 0.015 260);
-  --popover-foreground: oklch(0.95 0.02 200);
-  --primary: oklch(0.72 0.28 330);
-  --primary-foreground: oklch(0.06 0.01 260);
-  --secondary: oklch(0.12 0.02 260);
-  --secondary-foreground: oklch(0.85 0.15 200);
-  --muted: oklch(0.12 0.015 260);
-  --muted-foreground: oklch(0.55 0.05 220);
-  --accent: oklch(0.75 0.25 195);
-  --accent-foreground: oklch(0.06 0.01 260);
-  --destructive: oklch(0.65 0.28 25);
-  --destructive-foreground: oklch(0.95 0.02 200);
-  --border: oklch(0.2 0.04 260);
-  --input: oklch(0.12 0.02 260);
-  --ring: oklch(0.72 0.28 330);
-  --chart-1: oklch(0.72 0.28 330);
-  --chart-2: oklch(0.75 0.25 195);
-  --chart-3: oklch(0.7 0.25 150);
-  --chart-4: oklch(0.7 0.25 60);
-  --chart-5: oklch(0.7 0.25 280);
-  --sidebar: oklch(0.07 0.015 260);
-  --sidebar-foreground: oklch(0.95 0.02 200);
-  --sidebar-primary: oklch(0.72 0.28 330);
-  --sidebar-primary-foreground: oklch(0.06 0.01 260);
-  --sidebar-accent: oklch(0.12 0.02 260);
-  --sidebar-accent-foreground: oklch(0.85 0.15 200);
-  --sidebar-border: oklch(0.2 0.04 260);
-  --sidebar-ring: oklch(0.72 0.28 330);
+  /* Clean Minimal - Light Theme */
+  --radius: 0.5rem;
+  --background: oklch(0.99 0 0);
+  --foreground: oklch(0.15 0.01 0);
+  --card: oklch(0.97 0.01 0);
+  --card-foreground: oklch(0.15 0.01 0);
+  --popover: oklch(0.99 0 0);
+  --popover-foreground: oklch(0.15 0.01 0);
+  --primary: oklch(0.6 0.2 217);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.5 0.1 217);
+  --secondary-foreground: oklch(0.99 0 0);
+  --muted: oklch(0.92 0.01 0);
+  --muted-foreground: oklch(0.5 0.02 0);
+  --accent: oklch(0.6 0.2 217);
+  --accent-foreground: oklch(0.99 0 0);
+  --destructive: oklch(0.6 0.2 25);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.9 0.01 0);
+  --input: oklch(0.96 0.01 0);
+  --ring: oklch(0.6 0.2 217);
+  --chart-1: oklch(0.6 0.2 217);
+  --chart-2: oklch(0.65 0.15 200);
+  --chart-3: oklch(0.7 0.15 150);
+  --chart-4: oklch(0.75 0.15 60);
+  --chart-5: oklch(0.55 0.15 280);
+  --sidebar: oklch(0.98 0.01 0);
+  --sidebar-foreground: oklch(0.15 0.01 0);
+  --sidebar-primary: oklch(0.6 0.2 217);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.92 0.01 0);
+  --sidebar-accent-foreground: oklch(0.5 0.02 0);
+  --sidebar-border: oklch(0.9 0.01 0);
+  --sidebar-ring: oklch(0.6 0.2 217);
 }
 
-/* Dark mode same as root for cyberpunk (always dark) */
+.dark {
+  --background: oklch(0.08 0.01 0);
+  --foreground: oklch(0.95 0.01 0);
+  --card: oklch(0.12 0.01 0);
+  --card-foreground: oklch(0.95 0.01 0);
+  --popover: oklch(0.1 0.01 0);
+  --popover-foreground: oklch(0.95 0.01 0);
+  --primary: oklch(0.6 0.2 217);
+  --primary-foreground: oklch(0.08 0.01 0);
+  --secondary: oklch(0.5 0.1 217);
+  --secondary-foreground: oklch(0.95 0.01 0);
+  --muted: oklch(0.25 0.01 0);
+  --muted-foreground: oklch(0.7 0.02 0);
+  --accent: oklch(0.6 0.2 217);
+  --accent-foreground: oklch(0.08 0.01 0);
+  --border: oklch(0.2 0.01 0);
+  --input: oklch(0.15 0.01 0);
+  --ring: oklch(0.6 0.2 217);
+}
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
-    font-family: "Rajdhani", sans-serif;
-    background-color: var(--dark-bg);
-    background-image:
-      radial-gradient(ellipse at 20% 50%, rgba(255, 45, 120, 0.04) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 20%, rgba(0, 245, 255, 0.04) 0%, transparent 50%);
-    min-height: 100vh;
+    font-family: "Inter", sans-serif;
   }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-semibold;
+  }
+
+  h1 {
+    @apply text-3xl;
+  }
+
+  h2 {
+    @apply text-2xl;
+  }
+
+  h3 {
+    @apply text-xl;
+  }
+
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
   [type="button"]:not(:disabled),
@@ -118,24 +145,11 @@
 }
 
 @layer components {
-  /**
-   * Custom container utility that centers content and adds responsive padding.
-   *
-   * This overrides Tailwind's default container behavior to:
-   * - Auto-center content (mx-auto)
-   * - Add responsive horizontal padding
-   * - Set max-width for large screens
-   *
-   * Usage: <div className="container">...</div>
-   *
-   * For custom widths, use max-w-* utilities directly:
-   * <div className="max-w-6xl mx-auto px-4">...</div>
-   */
   .container {
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 1rem; /* 16px - mobile padding */
+    padding-left: 1rem;
     padding-right: 1rem;
   }
 
@@ -146,56 +160,92 @@
 
   @media (min-width: 640px) {
     .container {
-      padding-left: 1.5rem; /* 24px - tablet padding */
+      padding-left: 1.5rem;
       padding-right: 1.5rem;
     }
   }
 
   @media (min-width: 1024px) {
     .container {
-      padding-left: 2rem; /* 32px - desktop padding */
+      padding-left: 2rem;
       padding-right: 2rem;
-      max-width: 1280px; /* Standard content width */
+      max-width: 1280px;
     }
   }
 }
-/* ─── Cyberpunk Utilities ─────────────────────────────────────────────────── */
+
 @layer utilities {
-  .glow-pink { text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink), 0 0 40px var(--neon-pink); }
-  .glow-cyan { text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan); }
-  .glow-green { text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green); }
-  .box-glow-pink { box-shadow: 0 0 15px rgba(255, 45, 120, 0.3), 0 0 30px rgba(255, 45, 120, 0.1), inset 0 0 15px rgba(255, 45, 120, 0.05); }
-  .box-glow-cyan { box-shadow: 0 0 15px rgba(0, 245, 255, 0.3), 0 0 30px rgba(0, 245, 255, 0.1), inset 0 0 15px rgba(0, 245, 255, 0.05); }
-  .box-glow-subtle { box-shadow: 0 0 20px rgba(255, 45, 120, 0.1), 0 1px 0 rgba(0, 245, 255, 0.1); }
-  .cyber-card { background: var(--dark-card); border: 1px solid var(--dark-border); position: relative; overflow: hidden; }
-  .cyber-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent); opacity: 0.5; }
-  .cyber-grid { background-image: linear-gradient(rgba(0, 245, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 245, 255, 0.03) 1px, transparent 1px); background-size: 40px 40px; }
-  .font-orbitron { font-family: "Orbitron", monospace; }
-  .font-mono-tech { font-family: "Share Tech Mono", monospace; }
-  .text-gradient-pink-cyan { background: linear-gradient(135deg, var(--neon-pink), var(--neon-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .text-neon-pink { color: var(--neon-pink); }
-  .text-neon-cyan { color: var(--neon-cyan); }
-  .text-neon-green { color: var(--neon-green); }
-  .status-dot-active { width: 6px; height: 6px; border-radius: 50%; background: var(--neon-green); box-shadow: 0 0 6px var(--neon-green); animation: pulse-green 2s infinite; display: inline-block; }
-  .status-dot-idle { width: 6px; height: 6px; border-radius: 50%; background: var(--neon-cyan); box-shadow: 0 0 6px var(--neon-cyan); display: inline-block; }
-  .status-dot-error { width: 6px; height: 6px; border-radius: 50%; background: var(--neon-pink); box-shadow: 0 0 6px var(--neon-pink); display: inline-block; }
-  .animate-flicker { animation: flicker 4s infinite; }
-  .animate-cyber-pulse { animation: cyber-pulse 2s infinite; }
+  .px-safe {
+    @apply px-4 md:px-6 lg:px-8;
+  }
+
+  .py-safe {
+    @apply py-4 md:py-6 lg:py-8;
+  }
+
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  .flex-between {
+    @apply flex items-center justify-between;
+  }
+
+  .container-safe {
+    @apply max-w-7xl mx-auto px-4 md:px-6 lg:px-8;
+  }
+
+  .truncate-2 {
+    @apply line-clamp-2;
+  }
+
+  .truncate-3 {
+    @apply line-clamp-3;
+  }
+
+  .shadow-soft {
+    @apply shadow-sm;
+  }
+
+  .shadow-medium {
+    @apply shadow-md;
+  }
+
+  .shadow-hard {
+    @apply shadow-lg;
+  }
+
+  .font-mono-tech {
+    font-family: "Fira Code", monospace;
+  }
+
+  .status-dot-active {
+    @apply w-1.5 h-1.5 rounded-full bg-green-500 shadow-sm;
+  }
+
+  .status-dot-idle {
+    @apply w-1.5 h-1.5 rounded-full bg-blue-500 shadow-sm;
+  }
+
+  .status-dot-error {
+    @apply w-1.5 h-1.5 rounded-full bg-red-500 shadow-sm;
+  }
 }
 
-::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-track { background: var(--dark-bg); }
-::-webkit-scrollbar-thumb { background: var(--neon-pink); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: var(--neon-cyan); }
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
 
-@keyframes pulse-green {
-  0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--neon-green); }
-  50% { opacity: 0.5; box-shadow: 0 0 12px var(--neon-green); }
+::-webkit-scrollbar-track {
+  background: var(--background);
 }
-@keyframes flicker {
-  0%, 100% { opacity: 1; } 92% { opacity: 1; } 93% { opacity: 0.8; } 94% { opacity: 1; } 96% { opacity: 0.9; } 97% { opacity: 1; }
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
 }
-@keyframes cyber-pulse {
-  0%, 100% { box-shadow: 0 0 5px rgba(255, 45, 120, 0.3); }
-  50% { box-shadow: 0 0 20px rgba(255, 45, 120, 0.6), 0 0 40px rgba(255, 45, 120, 0.2); }
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
 }

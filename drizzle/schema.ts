@@ -227,3 +227,121 @@ export const integrationSettings = mysqlTable("integration_settings", {
 
 export type IntegrationSettings = typeof integrationSettings.$inferSelect;
 export type InsertIntegrationSettings = typeof integrationSettings.$inferInsert;
+
+// ─── Scheduled Tasks (Autonomous Scheduling) ──────────────────────────────────
+export const scheduledTasks = mysqlTable("scheduled_tasks", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  type: mysqlEnum("type", ["campaign", "content", "analysis", "optimization", "report"]).notNull(),
+  cronExpression: varchar("cronExpression", { length: 100 }).notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
+  lastRun: timestamp("lastRun"),
+  nextRun: timestamp("nextRun"),
+  config: json("config"),
+  campaignId: int("campaignId"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ScheduledTask = typeof scheduledTasks.$inferSelect;
+export type InsertScheduledTask = typeof scheduledTasks.$inferInsert;
+
+// ─── Webhooks (API Triggers) ──────────────────────────────────────────────────
+export const webhooks = mysqlTable("webhooks", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  url: varchar("url", { length: 500 }).notNull(),
+  event: varchar("event", { length: 100 }).notNull(),
+  secret: varchar("secret", { length: 255 }).notNull(),
+  isActive: boolean("isActive").default(true).notNull(),
+  retries: int("retries").default(3),
+  timeout: int("timeout").default(30),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Webhook = typeof webhooks.$inferSelect;
+export type InsertWebhook = typeof webhooks.$inferInsert;
+
+// ─── Content Library (Images & Videos) ────────────────────────────────────────
+export const contentLibrary = mysqlTable("content_library", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  campaignId: int("campaignId"),
+  contentType: mysqlEnum("contentType", ["image", "video", "text"]).notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  url: varchar("url", { length: 500 }).notNull(),
+  thumbnail: varchar("thumbnail", { length: 500 }),
+  fileSize: bigint("fileSize", { mode: "number" }),
+  duration: int("duration"),
+  format: varchar("format", { length: 50 }),
+  status: mysqlEnum("status", ["draft", "approved", "published", "archived"]).default("draft").notNull(),
+  performance: json("performance"),
+  tags: json("tags"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ContentLibrary = typeof contentLibrary.$inferSelect;
+export type InsertContentLibrary = typeof contentLibrary.$inferInsert;
+
+// ─── Video Generation Jobs ────────────────────────────────────────────────────
+export const videoGenerationJobs = mysqlTable("video_generation_jobs", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  campaignId: int("campaignId"),
+  prompt: text("prompt").notNull(),
+  style: varchar("style", { length: 100 }),
+  duration: int("duration").default(15),
+  status: mysqlEnum("status", ["pending", "processing", "completed", "failed"]).default("pending").notNull(),
+  videoUrl: varchar("videoUrl", { length: 500 }),
+  thumbnailUrl: varchar("thumbnailUrl", { length: 500 }),
+  errorMessage: text("errorMessage"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  completedAt: timestamp("completedAt"),
+});
+
+export type VideoGenerationJob = typeof videoGenerationJobs.$inferSelect;
+export type InsertVideoGenerationJob = typeof videoGenerationJobs.$inferInsert;
+
+// ─── Metrics Tracking (Ad Performance) ────────────────────────────────────────
+export const metricsTracking = mysqlTable("metrics_tracking", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  campaignId: int("campaignId"),
+  date: timestamp("date").notNull(),
+  platform: varchar("platform", { length: 50 }).notNull(),
+  impressions: bigint("impressions", { mode: "number" }).default(0),
+  clicks: bigint("clicks", { mode: "number" }).default(0),
+  conversions: int("conversions").default(0),
+  spend: decimal("spend", { precision: 12, scale: 2 }).default("0"),
+  revenue: decimal("revenue", { precision: 12, scale: 2 }).default("0"),
+  ctr: decimal("ctr", { precision: 8, scale: 4 }),
+  cpc: decimal("cpc", { precision: 10, scale: 2 }),
+  cpa: decimal("cpa", { precision: 10, scale: 2 }),
+  roas: decimal("roas", { precision: 8, scale: 4 }),
+  conversionRate: decimal("conversionRate", { precision: 8, scale: 4 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type MetricsTracking = typeof metricsTracking.$inferSelect;
+export type InsertMetricsTracking = typeof metricsTracking.$inferInsert;
+
+// ─── Orchestration State (Real-time Coordination) ────────────────────────────
+export const orchestrationState = mysqlTable("orchestration_state", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  campaignId: int("campaignId"),
+  activeAgents: json("activeAgents"),
+  taskQueue: json("taskQueue"),
+  decisions: json("decisions"),
+  state: mysqlEnum("state", ["idle", "running", "paused", "error"]).default("idle").notNull(),
+  lastUpdate: timestamp("lastUpdate").defaultNow().onUpdateNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type OrchestrationState = typeof orchestrationState.$inferSelect;
+export type InsertOrchestrationState = typeof orchestrationState.$inferInsert;
