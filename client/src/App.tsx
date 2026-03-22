@@ -4,17 +4,44 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
+import CyberLayout from "./components/CyberLayout";
+import Dashboard from "./pages/Dashboard";
+import Campaigns from "./pages/Campaigns";
+import StrategyAgent from "./pages/StrategyAgent";
+import CopywritingAgent from "./pages/CopywritingAgent";
+import VisualAgent from "./pages/VisualAgent";
+import MediaBuyingAgent from "./pages/MediaBuyingAgent";
+import OptimizationAgent from "./pages/OptimizationAgent";
+import Leads from "./pages/Leads";
+import Competitors from "./pages/Competitors";
+import Analytics from "./pages/Analytics";
+import SettingsPage from "./pages/Settings";
 
 function Router() {
-  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
+      <Route path="/" component={Dashboard} />
+      <Route path="/campaigns" component={Campaigns} />
+      <Route path="/strategy" component={StrategyAgent} />
+      <Route path="/copywriting" component={CopywritingAgent} />
+      <Route path="/visual" component={VisualAgent} />
+      <Route path="/media-buying" component={MediaBuyingAgent} />
+      <Route path="/optimization" component={OptimizationAgent} />
+      <Route path="/leads" component={Leads} />
+      <Route path="/competitors" component={Competitors} />
+      <Route path="/analytics" component={Analytics} />
+      <Route path="/settings" component={SettingsPage} />
+      <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
+  );
+}
+
+function AppContent() {
+  return (
+    <CyberLayout>
+      <Router />
+    </CyberLayout>
   );
 }
 
@@ -26,13 +53,10 @@ function Router() {
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider
-        defaultTheme="light"
-        // switchable
-      >
+      <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
           <Toaster />
-          <Router />
+          <AppContent />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
