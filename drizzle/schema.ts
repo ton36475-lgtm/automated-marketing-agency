@@ -345,3 +345,111 @@ export const orchestrationState = mysqlTable("orchestration_state", {
 
 export type OrchestrationState = typeof orchestrationState.$inferSelect;
 export type InsertOrchestrationState = typeof orchestrationState.$inferInsert;
+
+// ─── CEO Gem - Executive Board ──────────────────────────────────────────────
+export const executiveGems = mysqlTable("executive_gems", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  gemName: varchar("gemName", { length: 100 }).notNull(),
+  gemRole: mysqlEnum("gemRole", ["ceo", "cmo", "cto", "cfo", "coo", "strategy", "creative", "media", "optimization", "analytics"]).notNull(),
+  systemPrompt: text("systemPrompt"),
+  personality: text("personality"),
+  goals: json("goals"),
+  kpis: json("kpis"),
+  isActive: boolean("isActive").default(true).notNull(),
+  lastAction: timestamp("lastAction"),
+  totalDecisions: int("totalDecisions").default(0),
+  successRate: decimal("successRate", { precision: 5, scale: 2 }).default("0"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ExecutiveGem = typeof executiveGems.$inferSelect;
+export type InsertExecutiveGem = typeof executiveGems.$inferInsert;
+
+// ─── CEO Decisions (AI-driven Decision Log) ─────────────────────────────────
+export const ceoDecisions = mysqlTable("ceo_decisions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  gemId: int("gemId").notNull(),
+  decisionType: mysqlEnum("decisionType", [
+    "budget_allocation", "campaign_launch", "campaign_pause", "campaign_scale",
+    "content_approval", "audience_shift", "bid_adjustment", "emergency_stop",
+    "resource_reallocation", "strategy_pivot", "team_directive"
+  ]).notNull(),
+  title: varchar("title", { length: 255 }).notNull(),
+  reasoning: text("reasoning"),
+  context: json("context"),
+  action: json("action"),
+  impact: json("impact"),
+  confidence: decimal("confidence", { precision: 5, scale: 2 }),
+  status: mysqlEnum("status", ["pending", "approved", "executed", "rejected", "reverted"]).default("pending").notNull(),
+  executedAt: timestamp("executedAt"),
+  result: json("result"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type CeoDecision = typeof ceoDecisions.$inferSelect;
+export type InsertCeoDecision = typeof ceoDecisions.$inferInsert;
+
+// ─── Executive Board Meetings (Multi-Agent Deliberation) ─────────────────────
+export const boardMeetings = mysqlTable("board_meetings", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  topic: varchar("topic", { length: 255 }).notNull(),
+  triggerType: mysqlEnum("triggerType", ["scheduled", "event", "manual", "emergency"]).notNull(),
+  triggerReason: text("triggerReason"),
+  participants: json("participants"),
+  agenda: json("agenda"),
+  discussion: json("discussion"),
+  decisions: json("decisions"),
+  actionItems: json("actionItems"),
+  status: mysqlEnum("status", ["scheduled", "in_progress", "completed", "cancelled"]).default("scheduled").notNull(),
+  startedAt: timestamp("startedAt"),
+  completedAt: timestamp("completedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type BoardMeeting = typeof boardMeetings.$inferSelect;
+export type InsertBoardMeeting = typeof boardMeetings.$inferInsert;
+
+// ─── System Directives (CEO Commands to Agents) ─────────────────────────────
+export const systemDirectives = mysqlTable("system_directives", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  fromGemId: int("fromGemId").notNull(),
+  toGemRole: varchar("toGemRole", { length: 50 }).notNull(),
+  directive: text("directive").notNull(),
+  priority: mysqlEnum("priority", ["low", "medium", "high", "critical"]).default("medium").notNull(),
+  status: mysqlEnum("status", ["pending", "acknowledged", "in_progress", "completed", "failed"]).default("pending").notNull(),
+  response: text("response"),
+  deadline: timestamp("deadline"),
+  completedAt: timestamp("completedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SystemDirective = typeof systemDirectives.$inferSelect;
+export type InsertSystemDirective = typeof systemDirectives.$inferInsert;
+
+// ─── Performance Snapshots (System-wide KPI Tracking) ────────────────────────
+export const performanceSnapshots = mysqlTable("performance_snapshots", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  snapshotDate: timestamp("snapshotDate").notNull(),
+  totalSpend: decimal("totalSpend", { precision: 14, scale: 2 }).default("0"),
+  totalRevenue: decimal("totalRevenue", { precision: 14, scale: 2 }).default("0"),
+  totalLeads: int("totalLeads").default(0),
+  totalConversions: int("totalConversions").default(0),
+  avgRoas: decimal("avgRoas", { precision: 8, scale: 4 }),
+  avgCpa: decimal("avgCpa", { precision: 10, scale: 2 }),
+  activeCampaigns: int("activeCampaigns").default(0),
+  activeAgents: int("activeAgents").default(0),
+  systemHealth: decimal("systemHealth", { precision: 5, scale: 2 }),
+  aiDecisionsMade: int("aiDecisionsMade").default(0),
+  aiDecisionsSuccess: int("aiDecisionsSuccess").default(0),
+  insights: json("insights"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type PerformanceSnapshot = typeof performanceSnapshots.$inferSelect;
+export type InsertPerformanceSnapshot = typeof performanceSnapshots.$inferInsert;

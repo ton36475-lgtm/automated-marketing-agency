@@ -22,6 +22,13 @@
       "when": 1774162971201,
       "tag": "0002_solid_vanisher",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1774179393251,
+      "tag": "0003_sturdy_harrier",
+      "breakpoints": true
     }
   ]
 }

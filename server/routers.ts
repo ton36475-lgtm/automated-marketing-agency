@@ -14,6 +14,7 @@ import {
   runVisualAgent,
 } from "./agentEngine";
 import { integrationRouter as oauthIntegrationRouter } from "./routers/integrationRouter";
+import { ceoRouter } from "./routers/ceoRouter";
 import {
   createAdCreative,
   createCampaign,
@@ -435,6 +436,7 @@ export const appRouter = router({
   competitor: competitorRouter,
   optimization: optimizationRouter,
   integration: integrationRouter,
+  ceo: ceoRouter,
 });
 
 export type AppRouter = typeof appRouter;

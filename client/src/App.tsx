@@ -17,6 +17,7 @@ import Competitors from "./pages/Competitors";
 import Analytics from "./pages/Analytics";
 import SettingsPage from "./pages/Settings";
 import IntegrationSettings from "./pages/IntegrationSettings";
+import CeoBoard from "./pages/CeoBoard";
 
 function Router() {
   return (
@@ -33,6 +34,7 @@ function Router() {
       <Route path="/analytics" component={Analytics} />
       <Route path="/settings" component={SettingsPage} />
       <Route path="/integrations" component={IntegrationSettings} />
+      <Route path="/ceo-board" component={CeoBoard} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
@@ -55,7 +57,7 @@ function AppContent() {
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider defaultTheme="dark">
+      <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <Toaster />
           <AppContent />

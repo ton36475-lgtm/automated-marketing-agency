@@ -406,3 +406,163 @@ export async function updateOrchestrationStateData(campaignId: number, data: any
   if (!db) throw new Error("DB unavailable");
   return db.update(orchestrationState).set(data).where(eq(orchestrationState.campaignId, campaignId));
 }
+
+// ─── Executive Gems (CEO Board) ──────────────────────────────────────────────
+import {
+  executiveGems,
+  ceoDecisions,
+  boardMeetings,
+  systemDirectives,
+  performanceSnapshots,
+  InsertExecutiveGem,
+  InsertCeoDecision,
+  InsertBoardMeeting,
+  InsertSystemDirective,
+  InsertPerformanceSnapshot,
+} from "../drizzle/schema";
+
+export async function getExecutiveGems(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(executiveGems).where(eq(executiveGems.userId, userId)).orderBy(desc(executiveGems.createdAt));
+}
+
+export async function getExecutiveGemById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(executiveGems).where(eq(executiveGems.id, id)).limit(1);
+  return result[0];
+}
+
+export async function createExecutiveGem(data: InsertExecutiveGem) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  await db.insert(executiveGems).values(data);
+  const result = await db.select().from(executiveGems).where(eq(executiveGems.userId, data.userId)).orderBy(desc(executiveGems.createdAt)).limit(1);
+  return result[0];
+}
+
+export async function updateExecutiveGem(id: number, data: Partial<InsertExecutiveGem>) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  await db.update(executiveGems).set(data).where(eq(executiveGems.id, id));
+}
+
+export async function deleteExecutiveGem(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  await db.delete(executiveGems).where(eq(executiveGems.id, id));
+}
+
+// ─── CEO Decisions ───────────────────────────────────────────────────────────
+export async function getCeoDecisions(userId: number, limit = 50) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(ceoDecisions).where(eq(ceoDecisions.userId, userId)).orderBy(desc(ceoDecisions.createdAt)).limit(limit);
+}
+
+export async function getCeoDecisionById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(ceoDecisions).where(eq(ceoDecisions.id, id)).limit(1);
+  return result[0];
+}
+
+export async function createCeoDecision(data: InsertCeoDecision) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  await db.insert(ceoDecisions).values(data);
+  const result = await db.select().from(ceoDecisions).where(eq(ceoDecisions.userId, data.userId)).orderBy(desc(ceoDecisions.createdAt)).limit(1);
+  return result[0];
+}
+
+export async function updateCeoDecision(id: number, data: Partial<InsertCeoDecision>) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  await db.update(ceoDecisions).set(data).where(eq(ceoDecisions.id, id));
+}
+
+// ─── Board Meetings ──────────────────────────────────────────────────────────
+export async function getBoardMeetings(userId: number, limit = 20) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(boardMeetings).where(eq(boardMeetings.userId, userId)).orderBy(desc(boardMeetings.createdAt)).limit(limit);
+}
+
+export async function getBoardMeetingById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(boardMeetings).where(eq(boardMeetings.id, id)).limit(1);
+  return result[0];
+}
+
+export async function createBoardMeeting(data: InsertBoardMeeting) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  await db.insert(boardMeetings).values(data);
+  const result = await db.select().from(boardMeetings).where(eq(boardMeetings.userId, data.userId)).orderBy(desc(boardMeetings.createdAt)).limit(1);
+  return result[0];
+}
+
+export async function updateBoardMeeting(id: number, data: Partial<InsertBoardMeeting>) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  await db.update(boardMeetings).set(data).where(eq(boardMeetings.id, id));
+}
+
+// ─── System Directives ───────────────────────────────────────────────────────
+export async function getSystemDirectives(userId: number, limit = 50) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(systemDirectives).where(eq(systemDirectives.userId, userId)).orderBy(desc(systemDirectives.createdAt)).limit(limit);
+}
+
+export async function createSystemDirective(data: InsertSystemDirective) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  await db.insert(systemDirectives).values(data);
+  const result = await db.select().from(systemDirectives).where(eq(systemDirectives.userId, data.userId)).orderBy(desc(systemDirectives.createdAt)).limit(1);
+  return result[0];
+}
+
+export async function updateSystemDirective(id: number, data: Partial<InsertSystemDirective>) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  await db.update(systemDirectives).set(data).where(eq(systemDirectives.id, id));
+}
+
+// ─── Performance Snapshots ───────────────────────────────────────────────────
+export async function getPerformanceSnapshots(userId: number, limit = 30) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(performanceSnapshots).where(eq(performanceSnapshots.userId, userId)).orderBy(desc(performanceSnapshots.createdAt)).limit(limit);
+}
+
+export async function createPerformanceSnapshot(data: InsertPerformanceSnapshot) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  await db.insert(performanceSnapshots).values(data);
+}
+
+// ─── CEO Dashboard Stats ─────────────────────────────────────────────────────
+export async function getCeoDashboardStats(userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const [gemCount] = await db.select({ count: sql<number>`count(*)` }).from(executiveGems).where(eq(executiveGems.userId, userId));
+  const [activeGems] = await db.select({ count: sql<number>`count(*)` }).from(executiveGems).where(and(eq(executiveGems.userId, userId), eq(executiveGems.isActive, true)));
+  const [decisionCount] = await db.select({ count: sql<number>`count(*)` }).from(ceoDecisions).where(eq(ceoDecisions.userId, userId));
+  const [pendingDecisions] = await db.select({ count: sql<number>`count(*)` }).from(ceoDecisions).where(and(eq(ceoDecisions.userId, userId), eq(ceoDecisions.status, "pending")));
+  const [meetingCount] = await db.select({ count: sql<number>`count(*)` }).from(boardMeetings).where(eq(boardMeetings.userId, userId));
+  const [directiveCount] = await db.select({ count: sql<number>`count(*)` }).from(systemDirectives).where(eq(systemDirectives.userId, userId));
+  const [pendingDirectives] = await db.select({ count: sql<number>`count(*)` }).from(systemDirectives).where(and(eq(systemDirectives.userId, userId), eq(systemDirectives.status, "pending")));
+
+  return {
+    totalGems: Number(gemCount?.count ?? 0),
+    activeGems: Number(activeGems?.count ?? 0),
+    totalDecisions: Number(decisionCount?.count ?? 0),
+    pendingDecisions: Number(pendingDecisions?.count ?? 0),
+    totalMeetings: Number(meetingCount?.count ?? 0),
+    totalDirectives: Number(directiveCount?.count ?? 0),
+    pendingDirectives: Number(pendingDirectives?.count ?? 0),
+  };
+}
