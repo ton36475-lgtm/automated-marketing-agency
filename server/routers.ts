@@ -15,6 +15,7 @@ import {
 } from "./agentEngine";
 import { integrationRouter as oauthIntegrationRouter } from "./routers/integrationRouter";
 import { ceoRouter } from "./routers/ceoRouter";
+import { crossSystemRouter } from "./routers/crossSystemRouter";
 import {
   createAdCreative,
   createCampaign,
@@ -437,6 +438,7 @@ export const appRouter = router({
   optimization: optimizationRouter,
   integration: integrationRouter,
   ceo: ceoRouter,
+  crossSystem: crossSystemRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -27,6 +27,14 @@ import {
   users,
   videoGenerationJobs,
   webhooks,
+  systemModules,
+  seoData,
+  tradingData,
+  crossSystemAnalysis,
+  InsertSystemModule,
+  InsertSeoData,
+  InsertTradingData,
+  InsertCrossSystemAnalysis,
 } from "../drizzle/schema";
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -565,4 +573,100 @@ export async function getCeoDashboardStats(userId: number) {
     totalDirectives: Number(directiveCount?.count ?? 0),
     pendingDirectives: Number(pendingDirectives?.count ?? 0),
   };
+}
+
+
+// ─── System Modules ─────────────────────────────────────────────────────────
+export async function getSystemModules(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(systemModules).where(eq(systemModules.userId, userId)).orderBy(systemModules.moduleType);
+}
+
+export async function getSystemModule(userId: number, moduleType: "marketing" | "seo" | "trading") {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(systemModules).where(and(eq(systemModules.userId, userId), eq(systemModules.moduleType, moduleType))).limit(1);
+  return rows[0] || null;
+}
+
+export async function upsertSystemModule(data: InsertSystemModule) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  const existing = await db.select().from(systemModules).where(and(eq(systemModules.userId, data.userId), eq(systemModules.moduleType, data.moduleType))).limit(1);
+  if (existing.length > 0) {
+    await db.update(systemModules).set({ ...data, updatedAt: new Date() }).where(eq(systemModules.id, existing[0].id));
+    return existing[0].id;
+  }
+  const [result] = await db.insert(systemModules).values(data);
+  return result.insertId;
+}
+
+export async function updateSystemModule(id: number, data: Partial<InsertSystemModule>) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  await db.update(systemModules).set(data).where(eq(systemModules.id, id));
+}
+
+// ─── SEO Data ───────────────────────────────────────────────────────────────
+export async function createSeoSnapshot(data: InsertSeoData) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  const [result] = await db.insert(seoData).values(data);
+  return result.insertId;
+}
+
+export async function getLatestSeoData(userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(seoData).where(eq(seoData.userId, userId)).orderBy(desc(seoData.snapshotDate)).limit(1);
+  return rows[0] || null;
+}
+
+export async function getSeoHistory(userId: number, limit = 30) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(seoData).where(eq(seoData.userId, userId)).orderBy(desc(seoData.snapshotDate)).limit(limit);
+}
+
+// ─── Trading Data ───────────────────────────────────────────────────────────
+export async function createTradingSnapshot(data: InsertTradingData) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  const [result] = await db.insert(tradingData).values(data);
+  return result.insertId;
+}
+
+export async function getLatestTradingData(userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(tradingData).where(eq(tradingData.userId, userId)).orderBy(desc(tradingData.snapshotDate)).limit(1);
+  return rows[0] || null;
+}
+
+export async function getTradingHistory(userId: number, limit = 30) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(tradingData).where(eq(tradingData.userId, userId)).orderBy(desc(tradingData.snapshotDate)).limit(limit);
+}
+
+// ─── Cross-System Analysis ──────────────────────────────────────────────────
+export async function createCrossSystemAnalysis(data: InsertCrossSystemAnalysis) {
+  const db = await getDb();
+  if (!db) throw new Error("DB unavailable");
+  const [result] = await db.insert(crossSystemAnalysis).values(data);
+  return result.insertId;
+}
+
+export async function getCrossSystemAnalyses(userId: number, limit = 10) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(crossSystemAnalysis).where(eq(crossSystemAnalysis.userId, userId)).orderBy(desc(crossSystemAnalysis.createdAt)).limit(limit);
+}
+
+export async function getLatestCrossSystemAnalysis(userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(crossSystemAnalysis).where(eq(crossSystemAnalysis.userId, userId)).orderBy(desc(crossSystemAnalysis.createdAt)).limit(1);
+  return rows[0] || null;
 }

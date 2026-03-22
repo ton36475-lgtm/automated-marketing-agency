@@ -29,6 +29,13 @@
       "when": 1774179393251,
       "tag": "0003_sturdy_harrier",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1774180301703,
+      "tag": "0004_fresh_darkhawk",
+      "breakpoints": true
     }
   ]
 }

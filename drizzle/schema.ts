@@ -453,3 +453,95 @@ export const performanceSnapshots = mysqlTable("performance_snapshots", {
 
 export type PerformanceSnapshot = typeof performanceSnapshots.$inferSelect;
 export type InsertPerformanceSnapshot = typeof performanceSnapshots.$inferInsert;
+
+// ─── System Modules (Cross-System Tracking) ─────────────────────────────────
+export const systemModules = mysqlTable("system_modules", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  moduleName: varchar("moduleName", { length: 100 }).notNull(),
+  moduleType: mysqlEnum("moduleType", ["marketing", "seo", "trading"]).notNull(),
+  status: mysqlEnum("status", ["online", "degraded", "offline", "maintenance"]).default("offline").notNull(),
+  healthScore: decimal("healthScore", { precision: 5, scale: 2 }).default("0"),
+  config: json("config"),
+  lastSyncAt: timestamp("lastSyncAt"),
+  metrics: json("metrics"),
+  isConnected: boolean("isConnected").default(false).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SystemModule = typeof systemModules.$inferSelect;
+export type InsertSystemModule = typeof systemModules.$inferInsert;
+
+// ─── SEO Data (Travobet SEO Connector) ──────────────────────────────────────
+export const seoData = mysqlTable("seo_data", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  domain: varchar("domain", { length: 255 }),
+  totalKeywords: int("totalKeywords").default(0),
+  rankedKeywords: int("rankedKeywords").default(0),
+  avgPosition: decimal("avgPosition", { precision: 6, scale: 2 }),
+  totalBacklinks: int("totalBacklinks").default(0),
+  domainAuthority: decimal("domainAuthority", { precision: 5, scale: 2 }),
+  organicTraffic: bigint("organicTraffic", { mode: "number" }).default(0),
+  organicRevenue: decimal("organicRevenue", { precision: 14, scale: 2 }).default("0"),
+  topPages: json("topPages"),
+  topKeywords: json("topKeywords"),
+  backlinkProfile: json("backlinkProfile"),
+  contentDistribution: json("contentDistribution"),
+  technicalHealth: decimal("technicalHealth", { precision: 5, scale: 2 }),
+  crawlErrors: int("crawlErrors").default(0),
+  indexedPages: int("indexedPages").default(0),
+  siteSpeed: decimal("siteSpeed", { precision: 6, scale: 2 }),
+  mobileScore: decimal("mobileScore", { precision: 5, scale: 2 }),
+  snapshotDate: timestamp("snapshotDate").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SeoData = typeof seoData.$inferSelect;
+export type InsertSeoData = typeof seoData.$inferInsert;
+
+// ─── Trading Data (Polymarket Trading Connector) ────────────────────────────
+export const tradingData = mysqlTable("trading_data", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  totalPositions: int("totalPositions").default(0),
+  openPositions: int("openPositions").default(0),
+  totalInvested: decimal("totalInvested", { precision: 14, scale: 2 }).default("0"),
+  totalPnl: decimal("totalPnl", { precision: 14, scale: 2 }).default("0"),
+  realizedPnl: decimal("realizedPnl", { precision: 14, scale: 2 }).default("0"),
+  unrealizedPnl: decimal("unrealizedPnl", { precision: 14, scale: 2 }).default("0"),
+  winRate: decimal("winRate", { precision: 5, scale: 2 }),
+  avgReturn: decimal("avgReturn", { precision: 8, scale: 4 }),
+  activeMarkets: json("activeMarkets"),
+  topPositions: json("topPositions"),
+  recentTrades: json("recentTrades"),
+  signals: json("signals"),
+  riskScore: decimal("riskScore", { precision: 5, scale: 2 }),
+  portfolioValue: decimal("portfolioValue", { precision: 14, scale: 2 }).default("0"),
+  dailyVolume: decimal("dailyVolume", { precision: 14, scale: 2 }).default("0"),
+  snapshotDate: timestamp("snapshotDate").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type TradingData = typeof tradingData.$inferSelect;
+export type InsertTradingData = typeof tradingData.$inferInsert;
+
+// ─── Cross-System Analysis Logs ─────────────────────────────────────────────
+export const crossSystemAnalysis = mysqlTable("cross_system_analysis", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  analysisType: mysqlEnum("analysisType", ["cross_system_review", "synergy_analysis", "risk_assessment", "resource_optimization", "unified_report"]).notNull(),
+  marketingData: json("marketingData"),
+  seoData: json("seoData"),
+  tradingData: json("tradingData"),
+  insights: json("insights"),
+  recommendations: json("recommendations"),
+  synergies: json("synergies"),
+  risks: json("risks"),
+  overallHealthScore: decimal("overallHealthScore", { precision: 5, scale: 2 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type CrossSystemAnalysis = typeof crossSystemAnalysis.$inferSelect;
+export type InsertCrossSystemAnalysis = typeof crossSystemAnalysis.$inferInsert;

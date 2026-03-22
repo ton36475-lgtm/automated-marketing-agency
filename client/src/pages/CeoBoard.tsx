@@ -27,6 +27,16 @@ import {
   MessageSquare,
   FileText,
   Activity,
+  Globe,
+  LineChart,
+  Coins,
+  Link2,
+  ArrowUpRight,
+  ArrowDownRight,
+  Wifi,
+  WifiOff,
+  Search,
+  BarChart2,
 } from "lucide-react";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -49,7 +59,9 @@ import { Megaphone } from "lucide-react";
 
 // ─── Component ───────────────────────────────────────────────────────────────
 export default function CeoBoard() {
-  const [activeTab, setActiveTab] = useState<"overview" | "gems" | "decisions" | "meetings" | "directives">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "gems" | "decisions" | "meetings" | "directives" | "systems">("overview");
+  const [crossAnalysisType, setCrossAnalysisType] = useState<"cross_system_review" | "synergy_analysis" | "risk_assessment" | "resource_optimization" | "unified_report">("cross_system_review");
+  const [crossAnalysisResult, setCrossAnalysisResult] = useState<any>(null);
   const [meetingTopic, setMeetingTopic] = useState("");
   const [directiveText, setDirectiveText] = useState("");
   const [directiveTarget, setDirectiveTarget] = useState("");
@@ -63,6 +75,10 @@ export default function CeoBoard() {
   const decisionsQuery = trpc.ceo.decisions.list.useQuery({ limit: 20 });
   const meetingsQuery = trpc.ceo.meetings.list.useQuery({ limit: 10 });
   const directivesQuery = trpc.ceo.directives.list.useQuery({ limit: 20 });
+
+  // Cross-system queries
+  const crossOverviewQuery = trpc.crossSystem.modules.overview.useQuery();
+  const crossAnalysisHistoryQuery = trpc.crossSystem.analysis.history.useQuery({ limit: 5 });
 
   // ─── Mutations ───────────────────────────────────────────────────────────
   const utils = trpc.useUtils();
@@ -122,6 +138,49 @@ export default function CeoBoard() {
     },
   });
 
+  // Cross-system mutations
+  const initSeo = trpc.crossSystem.seo.initialize.useMutation({
+    onSuccess: () => {
+      toast.success("Travobet SEO connected");
+      utils.crossSystem.modules.overview.invalidate();
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const syncSeo = trpc.crossSystem.seo.sync.useMutation({
+    onSuccess: () => {
+      toast.success("SEO data synced");
+      utils.crossSystem.modules.overview.invalidate();
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const initTrading = trpc.crossSystem.trading.initialize.useMutation({
+    onSuccess: () => {
+      toast.success("Polymarket Trading connected");
+      utils.crossSystem.modules.overview.invalidate();
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const syncTrading = trpc.crossSystem.trading.sync.useMutation({
+    onSuccess: () => {
+      toast.success("Trading data synced");
+      utils.crossSystem.modules.overview.invalidate();
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const runCrossAnalysis = trpc.crossSystem.analysis.run.useMutation({
+    onSuccess: (data) => {
+      toast.success("Cross-system analysis complete");
+      setCrossAnalysisResult(data);
+      utils.crossSystem.analysis.history.invalidate();
+      utils.crossSystem.modules.overview.invalidate();
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
   const updateDecisionStatus = trpc.ceo.decisions.updateStatus.useMutation({
     onSuccess: () => {
       toast.success("Decision status updated");
@@ -174,6 +233,7 @@ export default function CeoBoard() {
     { id: "decisions" as const, label: "Decisions", icon: CheckCircle2 },
     { id: "meetings" as const, label: "Meetings", icon: MessageSquare },
     { id: "directives" as const, label: "Directives", icon: FileText },
+    { id: "systems" as const, label: "Systems", icon: Globe },
   ];
 
   return (
@@ -275,6 +335,22 @@ export default function CeoBoard() {
           setDirectivePriority={setDirectivePriority}
           handleIssueDirective={handleIssueDirective}
           issueDirective={issueDirective}
+        />
+      )}
+
+      {activeTab === "systems" && (
+        <SystemsTab
+          overview={crossOverviewQuery.data}
+          isLoading={crossOverviewQuery.isLoading}
+          analysisHistory={crossAnalysisHistoryQuery.data || []}
+          initSeo={initSeo}
+          syncSeo={syncSeo}
+          initTrading={initTrading}
+          syncTrading={syncTrading}
+          runCrossAnalysis={runCrossAnalysis}
+          crossAnalysisType={crossAnalysisType}
+          setCrossAnalysisType={setCrossAnalysisType}
+          crossAnalysisResult={crossAnalysisResult}
         />
       )}
     </div>
@@ -953,6 +1029,393 @@ function DirectivesTab({
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+// ─── Systems Tab (Cross-System Integration) ────────────────────────────────
+function SystemsTab({
+  overview,
+  isLoading,
+  analysisHistory,
+  initSeo,
+  syncSeo,
+  initTrading,
+  syncTrading,
+  runCrossAnalysis,
+  crossAnalysisType,
+  setCrossAnalysisType,
+  crossAnalysisResult,
+}: any) {
+  const seo = overview?.seo;
+  const trading = overview?.trading;
+  const marketing = overview?.marketing;
+  const latestAnalysis = overview?.latestAnalysis;
+
+  return (
+    <div className="space-y-6">
+      {/* System Status Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Marketing System */}
+        <Card className="border-l-4 border-l-emerald-500">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base flex items-center gap-2">
+                <div className="p-1.5 rounded-md bg-emerald-500/10">
+                  <BarChart3 className="w-4 h-4 text-emerald-500" />
+                </div>
+                Marketing Automation
+              </CardTitle>
+              <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-200">
+                <Wifi className="w-3 h-3 mr-1" /> Online
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="p-2 rounded-md bg-muted/50">
+                <p className="text-xs text-muted-foreground">Campaigns</p>
+                <p className="text-lg font-bold">{marketing?.stats?.totalCampaigns ?? 0}</p>
+              </div>
+              <div className="p-2 rounded-md bg-muted/50">
+                <p className="text-xs text-muted-foreground">Active</p>
+                <p className="text-lg font-bold text-emerald-600">{marketing?.stats?.activeCampaigns ?? 0}</p>
+              </div>
+              <div className="p-2 rounded-md bg-muted/50">
+                <p className="text-xs text-muted-foreground">Total Leads</p>
+                <p className="text-lg font-bold">{marketing?.stats?.totalLeads ?? 0}</p>
+              </div>
+              <div className="p-2 rounded-md bg-muted/50">
+                <p className="text-xs text-muted-foreground">Agents</p>
+                <p className="text-lg font-bold">{marketing?.stats?.activeAgents ?? 5}</p>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground">Always connected as the primary platform</p>
+          </CardContent>
+        </Card>
+
+        {/* Travobet SEO System */}
+        <Card className={`border-l-4 ${seo?.isConnected ? 'border-l-blue-500' : 'border-l-gray-300'}`}>
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base flex items-center gap-2">
+                <div className={`p-1.5 rounded-md ${seo?.isConnected ? 'bg-blue-500/10' : 'bg-gray-100'}`}>
+                  <Search className={`w-4 h-4 ${seo?.isConnected ? 'text-blue-500' : 'text-gray-400'}`} />
+                </div>
+                Travobet SEO
+              </CardTitle>
+              <Badge className={seo?.isConnected ? 'bg-blue-500/10 text-blue-600 border-blue-200' : 'bg-gray-100 text-gray-500 border-gray-200'}>
+                {seo?.isConnected ? <><Wifi className="w-3 h-3 mr-1" /> Online</> : <><WifiOff className="w-3 h-3 mr-1" /> Offline</>}
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {seo?.isConnected && seo?.latestData ? (
+              <>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-2 rounded-md bg-muted/50">
+                    <p className="text-xs text-muted-foreground">Organic Traffic</p>
+                    <p className="text-lg font-bold">{(seo.latestData.organicTraffic || 0).toLocaleString()}</p>
+                  </div>
+                  <div className="p-2 rounded-md bg-muted/50">
+                    <p className="text-xs text-muted-foreground">Domain Authority</p>
+                    <p className="text-lg font-bold text-blue-600">{seo.latestData.domainAuthority || 0}</p>
+                  </div>
+                  <div className="p-2 rounded-md bg-muted/50">
+                    <p className="text-xs text-muted-foreground">Keywords</p>
+                    <p className="text-lg font-bold">{(seo.latestData.totalKeywords || 0).toLocaleString()}</p>
+                  </div>
+                  <div className="p-2 rounded-md bg-muted/50">
+                    <p className="text-xs text-muted-foreground">Backlinks</p>
+                    <p className="text-lg font-bold">{(seo.latestData.totalBacklinks || 0).toLocaleString()}</p>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline" className="flex-1" onClick={() => syncSeo.mutate()} disabled={syncSeo.isPending}>
+                    {syncSeo.isPending ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <RefreshCw className="w-3 h-3 mr-1" />}
+                    Sync Data
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">Last sync: {seo.latestData.snapshotDate ? new Date(seo.latestData.snapshotDate).toLocaleString() : 'Never'}</p>
+              </>
+            ) : (
+              <div className="text-center py-4">
+                <Search className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+                <p className="text-sm text-muted-foreground mb-3">Not connected</p>
+                <Button size="sm" onClick={() => initSeo.mutate()} disabled={initSeo.isPending} className="bg-blue-500 hover:bg-blue-600 text-white">
+                  {initSeo.isPending ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <Link2 className="w-3 h-3 mr-1" />}
+                  Connect Travobet SEO
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Polymarket Trading System */}
+        <Card className={`border-l-4 ${trading?.isConnected ? 'border-l-purple-500' : 'border-l-gray-300'}`}>
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base flex items-center gap-2">
+                <div className={`p-1.5 rounded-md ${trading?.isConnected ? 'bg-purple-500/10' : 'bg-gray-100'}`}>
+                  <Coins className={`w-4 h-4 ${trading?.isConnected ? 'text-purple-500' : 'text-gray-400'}`} />
+                </div>
+                Polymarket Trading
+              </CardTitle>
+              <Badge className={trading?.isConnected ? 'bg-purple-500/10 text-purple-600 border-purple-200' : 'bg-gray-100 text-gray-500 border-gray-200'}>
+                {trading?.isConnected ? <><Wifi className="w-3 h-3 mr-1" /> Online</> : <><WifiOff className="w-3 h-3 mr-1" /> Offline</>}
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {trading?.isConnected && trading?.latestData ? (
+              <>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-2 rounded-md bg-muted/50">
+                    <p className="text-xs text-muted-foreground">Portfolio Value</p>
+                    <p className="text-lg font-bold">${(trading.latestData.portfolioValue || 0).toLocaleString()}</p>
+                  </div>
+                  <div className="p-2 rounded-md bg-muted/50">
+                    <p className="text-xs text-muted-foreground">Total P&L</p>
+                    <p className={`text-lg font-bold ${(trading.latestData.totalPnl || 0) >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+                      {(trading.latestData.totalPnl || 0) >= 0 ? '+' : ''}${(trading.latestData.totalPnl || 0).toLocaleString()}
+                    </p>
+                  </div>
+                  <div className="p-2 rounded-md bg-muted/50">
+                    <p className="text-xs text-muted-foreground">Open Positions</p>
+                    <p className="text-lg font-bold">{trading.latestData.openPositions || 0}</p>
+                  </div>
+                  <div className="p-2 rounded-md bg-muted/50">
+                    <p className="text-xs text-muted-foreground">Win Rate</p>
+                    <p className="text-lg font-bold text-purple-600">{trading.latestData.winRate || 0}%</p>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Button size="sm" variant="outline" className="flex-1" onClick={() => syncTrading.mutate()} disabled={syncTrading.isPending}>
+                    {syncTrading.isPending ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <RefreshCw className="w-3 h-3 mr-1" />}
+                    Sync Data
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">Last sync: {trading.latestData.snapshotDate ? new Date(trading.latestData.snapshotDate).toLocaleString() : 'Never'}</p>
+              </>
+            ) : (
+              <div className="text-center py-4">
+                <Coins className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+                <p className="text-sm text-muted-foreground mb-3">Not connected</p>
+                <Button size="sm" onClick={() => initTrading.mutate()} disabled={initTrading.isPending} className="bg-purple-500 hover:bg-purple-600 text-white">
+                  {initTrading.isPending ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <Link2 className="w-3 h-3 mr-1" />}
+                  Connect Polymarket
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Cross-System Analysis */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Globe className="w-5 h-5" />
+              Cross-System Analysis
+            </CardTitle>
+            <CardDescription>AI-powered analysis across Marketing, SEO, and Trading</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {crossAnalysisResult ? (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-sm font-medium">Overall Health Score</span>
+                    <p className="text-3xl font-bold mt-1">
+                      {crossAnalysisResult.unified?.overallHealthScore || 0}
+                      <span className="text-sm font-normal text-muted-foreground">/100</span>
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs text-muted-foreground">Total ROI</p>
+                    <p className={`text-xl font-bold ${(crossAnalysisResult.unified?.overallROI || 0) >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+                      {(crossAnalysisResult.unified?.overallROI || 0).toFixed(1)}%
+                    </p>
+                  </div>
+                </div>
+
+                {/* Insights */}
+                {crossAnalysisResult.unified?.insights?.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-medium mb-2 flex items-center gap-1">
+                      <Brain className="w-3.5 h-3.5" /> Key Insights
+                    </h4>
+                    <div className="space-y-1.5">
+                      {crossAnalysisResult.unified.insights.slice(0, 4).map((insight: string, i: number) => (
+                        <div key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                          <ChevronRight className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-blue-500" />
+                          <span>{insight}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Synergies */}
+                {crossAnalysisResult.unified?.synergies?.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-medium mb-2 flex items-center gap-1">
+                      <Link2 className="w-3.5 h-3.5" /> Cross-System Synergies
+                    </h4>
+                    <div className="space-y-1.5">
+                      {crossAnalysisResult.unified.synergies.slice(0, 3).map((synergy: string, i: number) => (
+                        <div key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                          <Sparkles className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-amber-500" />
+                          <span>{synergy}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Recommendations */}
+                {crossAnalysisResult.unified?.recommendations?.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-medium mb-2 flex items-center gap-1">
+                      <Target className="w-3.5 h-3.5" /> Recommendations
+                    </h4>
+                    <div className="space-y-1.5">
+                      {crossAnalysisResult.unified.recommendations.slice(0, 3).map((rec: string, i: number) => (
+                        <div key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                          <ArrowUpRight className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-emerald-500" />
+                          <span>{rec}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Risks */}
+                {crossAnalysisResult.unified?.risks?.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-medium mb-2 flex items-center gap-1">
+                      <AlertTriangle className="w-3.5 h-3.5" /> Risks
+                    </h4>
+                    <div className="space-y-1.5">
+                      {crossAnalysisResult.unified.risks.slice(0, 3).map((risk: string, i: number) => (
+                        <div key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                          <ArrowDownRight className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-red-500" />
+                          <span>{risk}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : latestAnalysis ? (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Last Analysis Health Score</span>
+                  <Badge variant={latestAnalysis.healthScore >= 70 ? 'default' : 'destructive'}>
+                    {latestAnalysis.healthScore}/100
+                  </Badge>
+                </div>
+                {latestAnalysis.insights && (latestAnalysis.insights as string[]).slice(0, 3).map((insight: string, i: number) => (
+                  <div key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                    <ChevronRight className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
+                    <span>{insight}</span>
+                  </div>
+                ))}
+                <p className="text-xs text-muted-foreground">Analyzed: {new Date(latestAnalysis.createdAt).toLocaleString()}</p>
+              </div>
+            ) : (
+              <div className="text-center py-8 text-muted-foreground">
+                <Globe className="w-12 h-12 mx-auto mb-3 opacity-30" />
+                <p>No cross-system analysis yet. Connect systems and run an analysis.</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Analysis Controls */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Brain className="w-5 h-5" />
+              Run Analysis
+            </CardTitle>
+            <CardDescription>Cross-system AI analysis</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <label className="text-sm font-medium mb-2 block">Analysis Type</label>
+              <select
+                value={crossAnalysisType}
+                onChange={(e) => setCrossAnalysisType(e.target.value)}
+                className="w-full p-2 rounded-md border bg-background text-sm"
+              >
+                <option value="cross_system_review">Cross-System Review</option>
+                <option value="synergy_analysis">Synergy Analysis</option>
+                <option value="risk_assessment">Risk Assessment</option>
+                <option value="resource_optimization">Resource Optimization</option>
+                <option value="unified_report">Unified Report</option>
+              </select>
+            </div>
+            <Button
+              onClick={() => runCrossAnalysis.mutate({ type: crossAnalysisType })}
+              disabled={runCrossAnalysis.isPending}
+              className="w-full"
+            >
+              {runCrossAnalysis.isPending ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  Analyzing...
+                </>
+              ) : (
+                <>
+                  <Play className="w-4 h-4 mr-2" />
+                  Run Cross-System Analysis
+                </>
+              )}
+            </Button>
+
+            {/* Quick Actions */}
+            <div className="pt-2 border-t space-y-2">
+              <p className="text-xs font-medium text-muted-foreground uppercase">Quick Actions</p>
+              <Button
+                size="sm"
+                variant="outline"
+                className="w-full justify-start"
+                onClick={() => {
+                  if (!seo?.isConnected) initSeo.mutate();
+                  if (!trading?.isConnected) initTrading.mutate();
+                  if (seo?.isConnected && trading?.isConnected) {
+                    syncSeo.mutate();
+                    syncTrading.mutate();
+                  }
+                }}
+                disabled={syncSeo.isPending || syncTrading.isPending || initSeo.isPending || initTrading.isPending}
+              >
+                <RefreshCw className="w-3.5 h-3.5 mr-2" />
+                {seo?.isConnected && trading?.isConnected ? 'Sync All Systems' : 'Connect All Systems'}
+              </Button>
+            </div>
+
+            {/* Analysis History */}
+            {analysisHistory.length > 0 && (
+              <div className="pt-2 border-t">
+                <p className="text-xs font-medium text-muted-foreground uppercase mb-2">Recent Analyses</p>
+                <div className="space-y-2">
+                  {analysisHistory.map((a: any) => (
+                    <div key={a.id} className="flex items-center justify-between text-xs">
+                      <span className="text-muted-foreground truncate">{a.analysisType.replace(/_/g, ' ')}</span>
+                      <Badge variant="outline" className="text-xs">
+                        {Number(a.overallHealthScore || 0).toFixed(0)}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
