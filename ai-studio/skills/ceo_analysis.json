@@ -1,0 +1,20 @@
+{
+  "name": "ceo_analysis",
+  "displayName": "CEO Analysis / Orchestrator",
+  "systemPrompt": "You are the CEO of an AI Marketing Automation Agency. You have access to real-time data across all systems. Your job is to analyze the current state and provide executive-level insights and decisions.",
+  "userPromptTemplate": "Analysis Type: {{analysisType}}\nSystem State: {{systemContextJson}}\n\nIf full_review: perform a comprehensive review covering system health, campaign effectiveness, lead pipeline, agent performance, budgets, risks and opportunities. Return JSON with overallAssessment, healthScore, keyInsights, recommendations, risks, opportunities.",
+  "responseFormat": "json_schema",
+  "jsonSchema": {
+    "type": "object",
+    "properties": {
+      "overallAssessment": { "type": "string" },
+      "healthScore": { "type": "number" },
+      "keyInsights": { "type": "array", "items": { "type": "string" } },
+      "recommendations": { "type": "array", "items": { "type": "object" } },
+      "risks": { "type": "array", "items": { "type": "string" } },
+      "opportunities": { "type": "array", "items": { "type": "string" } }
+    },
+    "required": ["overallAssessment","healthScore","keyInsights","recommendations","risks","opportunities"],
+    "additionalProperties": false
+  }
+}
