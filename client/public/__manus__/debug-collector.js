@@ -251,7 +251,7 @@
 
   function installUiEventListeners() {
     // Clicks
-    document.addEventListener(
+    ument.addEventListener(
       "click",
       function (e) {
         var t = e.target;
@@ -266,7 +266,7 @@
     );
 
     // Typing "commit" events
-    document.addEventListener(
+    ument.addEventListener(
       "change",
       function (e) {
         var t = e.target;
@@ -279,7 +279,7 @@
       true
     );
 
-    document.addEventListener(
+    ument.addEventListener(
       "focusin",
       function (e) {
         var t = e.target;
@@ -289,7 +289,7 @@
       true
     );
 
-    document.addEventListener(
+    ument.addEventListener(
       "focusout",
       function (e) {
         var t = e.target;
@@ -303,7 +303,7 @@
     );
 
     // Enter/Escape are useful for form flows & modals
-    document.addEventListener(
+    ument.addEventListener(
       "keydown",
       function (e) {
         if (e.key !== "Enter" && e.key !== "Escape") return;
@@ -315,7 +315,7 @@
     );
 
     // Form submissions
-    document.addEventListener(
+    ument.addEventListener(
       "submit",
       function (e) {
         var t = e.target;
@@ -336,7 +336,7 @@
         logUiEvent("scroll", {
           scrollX: window.scrollX,
           scrollY: window.scrollY,
-          documentHeight: document.documentElement.scrollHeight,
+          umentHeight: ument.umentElement.scrollHeight,
           viewportHeight: window.innerHeight,
         });
       },
