@@ -206,3 +206,39 @@ Suggested JSON task envelope:
 - Realtime visibility of agent execution
 - Traceable decision pipeline from CEO directive to agent output
 - Faster handoff to Codex for implementation and maintenance
+
+---
+
+## 10) Warp Oz integration blueprint (for cloud agent orchestration)
+
+If you choose Warp Oz as the cloud execution layer, map it into this architecture as follows:
+
+- **Notion** remains the command source and audit surface.
+- **Oz** runs parallel cloud agents (programmable + auditable control plane).
+- **Your War Room backend** becomes the policy and synchronization layer.
+
+### Practical mapping
+- Notion `Directives` row approved -> backend calls Oz API/SDK/CLI to launch agent run.
+- Oz run/session ID -> persisted in `Agent Runs.Run ID` and `Logs URL`.
+- Oz status webhooks/polling -> backend updates Notion `Status`, `Output Summary`, `Error`.
+- Escalations in Notion (`Critical`, repeated failures) -> backend can pause or steer active Oz sessions.
+
+### Why this pairing works
+- Oz provides cloud scale, parallel execution, and steerability for coding/automation agents.
+- Notion provides executive visibility, approvals, and historical traceability.
+- Combined model gives you both **execution power** and **governance/auditability**.
+
+### Additional fields recommended when using Oz
+Add to `Agent Runs`:
+- `Orchestrator` (select: Oz, Internal, Other)
+- `Orchestrator Run ID` (text)
+- `Model` (select/text)
+- `Compute Class` (select)
+- `Cost Estimate` (number)
+
+### Minimal integration checklist for Oz path
+- [ ] Enable Oz API/SDK/CLI access in infrastructure account
+- [ ] Create backend adapter: `launchRun()`, `getRunStatus()`, `cancelRun()`
+- [ ] Persist Oz run IDs + URLs to Notion `Agent Runs`
+- [ ] Add retry + idempotency keys for launch calls
+- [ ] Add watchdog to reconcile drift between Oz and Notion statuses
