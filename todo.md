@@ -155,3 +155,83 @@
 - [x] Unit tests for connector services (14 tests passing)
 - [x] Unit tests for cross-system analysis
 - [x] Integration tests for data flow
+
+
+## Phase 10: Agent Performance Monitoring System (v3.2)
+
+### Database & Backend
+- [ ] Database schema: agent_metrics, agent_executions, agent_logs, agent_performance_snapshots, agent_skills_knowledge_base
+- [ ] Agent Telemetry System: capture execution logs, output quality, resource usage
+- [ ] Performance Analytics Engine: LLM-powered analysis of agent performance
+- [ ] Agent Performance Tracking: success rate, quality score, execution time, cost per agent
+
+### Frontend - Agent Performance Dashboard
+- [ ] Agent Performance Overview: system-wide metrics (avg success rate, avg quality, total agents)
+- [ ] Individual Agent Analysis: detailed metrics for each of 7 agents
+- [ ] Agent Collaboration Analysis: how well agents work together
+- [ ] Performance Trends: historical data and trend analysis
+- [ ] Performance Recommendations: AI-generated insights and bottleneck identification
+- [ ] Agent Skills Knowledge Base: reusable skills and best practices
+
+### Testing
+- [ ] Unit tests for performance analytics
+- [ ] Integration tests for telemetry system
+
+
+## Phase 11: Vercel AI Gateway Integration - Multi-Model Unified API (v4.0)
+
+### Phase 1: Deep Analysis
+- [ ] Audit all current LLM calls (CEO Engine, Performance Analytics, Cross-System, Agent Engine)
+- [ ] Document LLM usage patterns: models, functions, frequency, token usage
+- [ ] Analyze current invokeLLM implementation and dependencies
+- [ ] Identify all AI-powered features requiring migration
+- [ ] Create LLM usage baseline metrics
+
+### Phase 2: Design & Architecture
+- [ ] Design Vercel AI Gateway integration layer
+- [ ] Create unified LLM client wrapper (OpenAI, Anthropic, Gemini, xAI)
+- [ ] Design model fallback strategy
+- [ ] Plan observability schema for model performance tracking
+- [ ] Design cost tracking and billing structure
+
+### Phase 3: Setup & Configuration
+- [ ] Set up Vercel AI Gateway account and API key
+- [ ] Configure environment variables for AI Gateway
+- [ ] Create model configuration (OpenAI, Anthropic, Gemini, xAI endpoints)
+- [ ] Set up cost tracking database schema
+- [ ] Create observability logging infrastructure
+
+### Phase 4: Core Migration - Unified LLM Client
+- [ ] Create unified LLM client (`server/aiGateway/client.ts`)
+- [ ] Implement model selection logic
+- [ ] Add fallback mechanism for provider failures
+- [ ] Create request/response logging for observability
+- [ ] Add cost calculation per request
+
+### Phase 5: System Migration
+- [ ] Migrate CEO Agent Engine to AI Gateway
+- [ ] Migrate Performance Analytics Engine to AI Gateway
+- [ ] Migrate Cross-System Analysis Engine to AI Gateway
+- [ ] Migrate Agent Engine (7 agents) to AI Gateway
+- [ ] Update all tRPC routers to use unified client
+
+### Phase 6: Frontend - Multi-Model Dashboard
+- [ ] Create Model Performance Comparison page
+- [ ] Add real-time observability dashboard
+- [ ] Show token usage per model per task
+- [ ] Display cost comparison across models
+- [ ] Add model selection UI for A/B testing
+
+### Phase 7: Advanced Features
+- [ ] Implement intelligent fallback logic
+- [ ] Add cost optimization recommendations
+- [ ] Create model performance benchmarks
+- [ ] Add A/B testing framework for model comparison
+- [ ] Implement caching for repeated queries
+
+### Phase 8: Testing & Documentation
+- [ ] Write unit tests for AI Gateway client
+- [ ] Write integration tests for all migrated systems
+- [ ] Create API documentation
+- [ ] Document model selection strategy
+- [ ] Performance testing and optimization
