@@ -137,17 +137,17 @@ function DashboardLayoutContent({
     };
 
     if (isResizing) {
-      ument.addEventListener("mousemove", handleMouseMove);
-      ument.addEventListener("mouseup", handleMouseUp);
-      ument.body.style.cursor = "col-resize";
-      ument.body.style.userSelect = "none";
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+      document.body.style.cursor = "col-resize";
+      document.body.style.userSelect = "none";
     }
 
     return () => {
-      ument.removeEventListener("mousemove", handleMouseMove);
-      ument.removeEventListener("mouseup", handleMouseUp);
-      ument.body.style.cursor = "";
-      ument.body.style.userSelect = "";
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
     };
   }, [isResizing, setSidebarWidth]);
 

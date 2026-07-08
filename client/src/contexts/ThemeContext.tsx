@@ -30,7 +30,7 @@ export function ThemeProvider({
   });
 
   useEffect(() => {
-    const root = ument.umentElement;
+    const root = document.documentElement;
     if (theme === "dark") {
       root.classList.add("dark");
     } else {

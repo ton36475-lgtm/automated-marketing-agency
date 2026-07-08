@@ -52,7 +52,7 @@ const trpcClient = trpc.createClient({
   ],
 });
 
-createRoot(ument.getElementById("root")!).render(
+createRoot(document.getElementById("root")!).render(
   <trpc.Provider client={trpcClient} queryClient={queryClient}>
     <QueryClientProvider client={queryClient}>
       <App />
