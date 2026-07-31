@@ -235,3 +235,87 @@
 - [ ] Create API documentation
 - [ ] Document model selection strategy
 - [ ] Performance testing and optimization
+
+
+---
+
+## Phase 12: Solar Engineering Module Integration (v4.1)
+
+### Phase 4: Backend & Frontend Foundation
+- [x] Design database schema (6 tables)
+- [x] Create database tables via SQL migration
+- [x] Create query helpers (server/solar.db.ts)
+- [x] Create tRPC routers (server/routers/solarRouter.ts)
+- [x] Integrate solar router into main appRouter
+- [x] Create Solar dashboard page (client/src/pages/Solar.tsx)
+- [x] Add /solar route to App.tsx
+
+### Phase 5: Sales Engineering Automation Engine
+- [ ] Implement PVWatts API integration
+  - [ ] Create PVWatts client wrapper
+  - [ ] Parse and store calculation results
+  - [ ] Estimate annual production
+  - [ ] Calculate capacity factor & performance ratio
+- [ ] Implement Automated Quote Generation
+  - [ ] Calculate system cost based on capacity
+  - [ ] Apply federal tax credit (30% ITC)
+  - [ ] Calculate monthly payment for financing options
+  - [ ] Generate PDF quote document
+  - [ ] Email quote to client
+- [ ] Implement Sales Automation
+  - [ ] Lead scoring based on electricity costs
+  - [ ] Automated follow-up email sequences
+  - [ ] Quote status tracking
+  - [ ] Deal closing automation
+- [ ] Implement Performance Monitoring
+  - [ ] Real-time production tracking
+  - [ ] Alert system for underperformance
+  - [ ] Monthly performance reports
+
+### Phase 5: Frontend Components
+- [ ] MapView Component
+  - [ ] Google Maps integration with proxy auth
+  - [ ] Polygon drawing for roof area
+  - [ ] Satellite imagery overlay
+  - [ ] Site measurement tools
+  - [ ] Coordinate capture
+- [ ] Solar Calculator UI
+  - [ ] System size estimation input
+  - [ ] PVWatts parameters form
+  - [ ] Production forecast display
+  - [ ] ROI calculator
+- [ ] Quote Generator UI
+  - [ ] Financing options selector (cash/loan/lease/PPA)
+  - [ ] Cost breakdown display
+  - [ ] PDF export button
+  - [ ] Email send functionality
+- [ ] Performance Dashboard
+  - [ ] Production charts (daily/monthly/annual)
+  - [ ] Efficiency metrics display
+  - [ ] Alert notifications
+  - [ ] Monthly reports
+
+### Phase 6: Integration with Marketing Agency
+- [ ] Connect Solar module to CEO Board
+- [ ] Add Solar metrics to cross-system analysis
+- [ ] Create Solar-specific agents
+  - [ ] Solar Sales Agent
+  - [ ] Solar Engineering Agent
+  - [ ] Solar Performance Agent
+- [ ] Integrate with HubSpot CRM
+  - [ ] Sync clients to contacts
+  - [ ] Sync deals to opportunities
+  - [ ] Track quote status
+- [ ] Integrate with Meta Ads
+  - [ ] Target solar leads
+  - [ ] Track conversion to quote
+  - [ ] Measure ROAS
+
+### Phase 7: Testing & Documentation
+- [ ] Unit tests for solar.db.ts
+- [ ] Unit tests for solarRouter.ts
+- [ ] Integration tests for PVWatts API
+- [ ] E2E tests for quote generation flow
+- [ ] API documentation
+- [ ] User guide for Solar module
+- [ ] Deployment checklist

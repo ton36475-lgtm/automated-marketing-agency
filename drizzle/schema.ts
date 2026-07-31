@@ -545,3 +545,142 @@ export const crossSystemAnalysis = mysqlTable("cross_system_analysis", {
 
 export type CrossSystemAnalysis = typeof crossSystemAnalysis.$inferSelect;
 export type InsertCrossSystemAnalysis = typeof crossSystemAnalysis.$inferInsert;
+
+// ─── SOLAR ENGINEERING MODULE ──────────────────────────────────────────────────
+
+// ─── Solar Clients ────────────────────────────────────────────────────────────
+export const solarClients = mysqlTable("solar_clients", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 320 }),
+  phone: varchar("phone", { length: 20 }),
+  address: text("address"),
+  city: varchar("city", { length: 100 }),
+  state: varchar("state", { length: 100 }),
+  zipCode: varchar("zipCode", { length: 20 }),
+  country: varchar("country", { length: 100 }),
+  companyName: varchar("companyName", { length: 255 }),
+  annualElectricityCost: decimal("annualElectricityCost", { precision: 10, scale: 2 }),
+  roofAge: int("roofAge"),
+  roofCondition: mysqlEnum("roofCondition", ["excellent", "good", "fair", "poor"]),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SolarClient = typeof solarClients.$inferSelect;
+export type InsertSolarClient = typeof solarClients.$inferInsert;
+
+// ─── Solar Sites ─────────────────────────────────────────────────────────────
+export const solarSites = mysqlTable("solar_sites", {
+  id: int("id").autoincrement().primaryKey(),
+  clientId: int("clientId").notNull(),
+  salesEngineerId: int("salesEngineerId"),
+  name: varchar("name", { length: 255 }),
+  address: text("address"),
+  city: varchar("city", { length: 100 }),
+  state: varchar("state", { length: 100 }),
+  zipCode: varchar("zipCode", { length: 20 }),
+  latitude: decimal("latitude", { precision: 10, scale: 8 }),
+  longitude: decimal("longitude", { precision: 11, scale: 8 }),
+  areaSqft: decimal("areaSqft", { precision: 10, scale: 2 }),
+  roofType: mysqlEnum("roofType", ["asphalt", "metal", "tile", "flat", "ground_mount"]),
+  roofTiltAngle: decimal("roofTiltAngle", { precision: 5, scale: 2 }),
+  roofAzimuth: decimal("roofAzimuth", { precision: 6, scale: 2 }),
+  shadingFactor: decimal("shadingFactor", { precision: 3, scale: 2 }),
+  polygonCoordinates: json("polygonCoordinates"),
+  satelliteImageUrl: text("satelliteImageUrl"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SolarSite = typeof solarSites.$inferSelect;
+export type InsertSolarSite = typeof solarSites.$inferInsert;
+
+// ─── Solar Calculations ──────────────────────────────────────────────────────
+export const solarCalculations = mysqlTable("solar_calculations", {
+  id: int("id").autoincrement().primaryKey(),
+  siteId: int("siteId").notNull(),
+  systemCapacityKw: decimal("systemCapacityKw", { precision: 10, scale: 2 }),
+  moduleType: mysqlEnum("moduleType", ["monocrystalline", "polycrystalline", "thin_film"]),
+  moduleEfficiency: decimal("moduleEfficiency", { precision: 5, scale: 2 }),
+  inverterEfficiency: decimal("inverterEfficiency", { precision: 5, scale: 2 }),
+  systemLossesPercent: decimal("systemLossesPercent", { precision: 5, scale: 2 }),
+  annualProductionKwh: decimal("annualProductionKwh", { precision: 12, scale: 2 }),
+  monthlyProduction: json("monthlyProduction"),
+  performanceRatio: decimal("performanceRatio", { precision: 5, scale: 2 }),
+  capacityFactor: decimal("capacityFactor", { precision: 5, scale: 2 }),
+  pvwattsResponse: json("pvwattsResponse"),
+  calculationTimestamp: timestamp("calculationTimestamp"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SolarCalculation = typeof solarCalculations.$inferSelect;
+export type InsertSolarCalculation = typeof solarCalculations.$inferInsert;
+
+// ─── Solar Offers (Quotes/Proposals) ──────────────────────────────────────────
+export const solarOffers = mysqlTable("solar_offers", {
+  id: int("id").autoincrement().primaryKey(),
+  siteId: int("siteId").notNull(),
+  clientId: int("clientId").notNull(),
+  salesEngineerId: int("salesEngineerId"),
+  systemCapacityKw: decimal("systemCapacityKw", { precision: 10, scale: 2 }),
+  systemCost: decimal("systemCost", { precision: 12, scale: 2 }),
+  equipmentCost: decimal("equipmentCost", { precision: 12, scale: 2 }),
+  installationCost: decimal("installationCost", { precision: 12, scale: 2 }),
+  permittingCost: decimal("permittingCost", { precision: 12, scale: 2 }),
+  totalCost: decimal("totalCost", { precision: 12, scale: 2 }),
+  federalTaxCredit: decimal("federalTaxCredit", { precision: 12, scale: 2 }),
+  stateIncentives: decimal("stateIncentives", { precision: 12, scale: 2 }),
+  netCost: decimal("netCost", { precision: 12, scale: 2 }),
+  monthlyPayment: decimal("monthlyPayment", { precision: 10, scale: 2 }),
+  financingTermMonths: int("financingTermMonths"),
+  estimatedAnnualSavings: decimal("estimatedAnnualSavings", { precision: 12, scale: 2 }),
+  paybackPeriodYears: decimal("paybackPeriodYears", { precision: 5, scale: 2 }),
+  roiPercent: decimal("roiPercent", { precision: 5, scale: 2 }),
+  status: mysqlEnum("status", ["draft", "sent", "viewed", "accepted", "rejected", "expired"]).default("draft"),
+  expiryDate: timestamp("expiryDate"),
+  pdfUrl: text("pdfUrl"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SolarOffer = typeof solarOffers.$inferSelect;
+export type InsertSolarOffer = typeof solarOffers.$inferInsert;
+
+// ─── Solar Performance Data ──────────────────────────────────────────────────
+export const solarPerformanceData = mysqlTable("solar_performance_data", {
+  id: int("id").autoincrement().primaryKey(),
+  siteId: int("siteId").notNull(),
+  date: timestamp("date").notNull(),
+  productionKwh: decimal("productionKwh", { precision: 10, scale: 2 }),
+  expectedProductionKwh: decimal("expectedProductionKwh", { precision: 10, scale: 2 }),
+  efficiencyPercent: decimal("efficiencyPercent", { precision: 5, scale: 2 }),
+  weatherCondition: varchar("weatherCondition", { length: 100 }),
+  temperatureCelsius: decimal("temperatureCelsius", { precision: 5, scale: 2 }),
+  irradianceWm2: decimal("irradianceWm2", { precision: 10, scale: 2 }),
+  alerts: json("alerts"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SolarPerformanceData = typeof solarPerformanceData.$inferSelect;
+export type InsertSolarPerformanceData = typeof solarPerformanceData.$inferInsert;
+
+// ─── Solar Sales Pipeline ────────────────────────────────────────────────────
+export const solarSalesPipeline = mysqlTable("solar_sales_pipeline", {
+  id: int("id").autoincrement().primaryKey(),
+  clientId: int("clientId").notNull(),
+  siteId: int("siteId"),
+  salesEngineerId: int("salesEngineerId"),
+  stage: mysqlEnum("stage", ["lead", "qualified", "site_survey", "design", "proposal", "negotiation", "closed_won", "closed_lost"]).default("lead"),
+  dealValue: decimal("dealValue", { precision: 12, scale: 2 }),
+  probabilityPercent: int("probabilityPercent"),
+  expectedCloseDate: timestamp("expectedCloseDate"),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SolarSalesPipeline = typeof solarSalesPipeline.$inferSelect;
+export type InsertSolarSalesPipeline = typeof solarSalesPipeline.$inferInsert;
