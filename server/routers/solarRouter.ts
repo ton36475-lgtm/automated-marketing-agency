@@ -1,6 +1,9 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { protectedProcedure, router } from "../_core/trpc";
+import { calculateSolarPotential, processPVWattsResult, estimateSystemSize } from "../services/pvwatts";
+import { generateQuoteContent, generateQuoteHTML } from "../services/quoteGenerator";
+import { scoreAndQualifyLead, generateFollowUpEmail } from "../services/solarSalesEngine";
 import {
   createSolarClient,
   getSolarClientsByUserId,
@@ -212,6 +215,49 @@ const solarCalculationsRouter = router({
         calculationTimestamp: new Date(),
       });
     }),
+
+  runPVWatts: protectedProcedure
+    .input(
+      z.object({
+        siteId: z.number(),
+        latitude: z.number(),
+        longitude: z.number(),
+        systemCapacityKw: z.number(),
+        moduleType: z.enum(["monocrystalline", "polycrystalline", "thin_film"]),
+        tiltAngle: z.number().optional(),
+        azimuth: z.number().optional(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const moduleTypeMap = { monocrystalline: 0, polycrystalline: 1, thin_film: 2 };
+      const pvwattsResult = await calculateSolarPotential({
+        latitude: input.latitude,
+        longitude: input.longitude,
+        systemCapacity: input.systemCapacityKw,
+        moduleType: moduleTypeMap[input.moduleType],
+        losses: 14.08,
+        arrayType: 0,
+        tilt: input.tiltAngle,
+        azimuth: input.azimuth,
+      });
+
+      const solarResult = processPVWattsResult(pvwattsResult, 2500);
+
+      return createSolarCalculation({
+        siteId: input.siteId,
+        systemCapacityKw: solarResult.systemCapacityKw,
+        moduleType: input.moduleType,
+        moduleEfficiency: 20,
+        inverterEfficiency: 96,
+        systemLossesPercent: 14.08,
+        annualProductionKwh: solarResult.annualProductionKwh,
+        monthlyProduction: solarResult.monthlyProductionKwh,
+        performanceRatio: solarResult.performanceRatio,
+        capacityFactor: solarResult.capacityFactor,
+        pvwattsResponse: pvwattsResult,
+        calculationTimestamp: new Date(),
+      });
+    })
 });
 
 // ─── Solar Offers Router ──────────────────────────────────────────────────────
@@ -279,6 +325,77 @@ const solarOffersRouter = router({
       await deleteSolarOffer(input.id);
       return { success: true };
     }),
+
+  generateQuote: protectedProcedure
+    .input(
+      z.object({
+        siteId: z.number(),
+        clientId: z.number(),
+        clientName: z.string(),
+        clientEmail: z.string(),
+        siteAddress: z.string(),
+        systemCapacityKw: z.number(),
+        annualProductionKwh: z.number(),
+        estimatedAnnualSavings: z.number(),
+        paybackPeriodYears: z.number(),
+        roiPercent: z.number(),
+        systemCost: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const federalTaxCredit = input.systemCost * 0.3;
+      const netCost = input.systemCost - federalTaxCredit;
+
+      const quoteContent = await generateQuoteContent({
+        clientName: input.clientName,
+        clientEmail: input.clientEmail,
+        siteAddress: input.siteAddress,
+        systemCapacityKw: input.systemCapacityKw,
+        annualProductionKwh: input.annualProductionKwh,
+        estimatedAnnualSavings: input.estimatedAnnualSavings,
+        paybackPeriodYears: input.paybackPeriodYears,
+        roiPercent: input.roiPercent,
+        systemCost: input.systemCost,
+        federalTaxCredit,
+        netCost,
+      });
+
+      const htmlContent = generateQuoteHTML({
+        clientName: input.clientName,
+        clientEmail: input.clientEmail,
+        siteAddress: input.siteAddress,
+        systemCapacityKw: input.systemCapacityKw,
+        annualProductionKwh: input.annualProductionKwh,
+        estimatedAnnualSavings: input.estimatedAnnualSavings,
+        paybackPeriodYears: input.paybackPeriodYears,
+        roiPercent: input.roiPercent,
+        systemCost: input.systemCost,
+        federalTaxCredit,
+        netCost,
+      }, quoteContent);
+
+      return createSolarOffer({
+        siteId: input.siteId,
+        clientId: input.clientId,
+        salesEngineerId: ctx.user.id,
+        systemCapacityKw: input.systemCapacityKw,
+        systemCost: input.systemCost,
+        equipmentCost: input.systemCost * 0.6,
+        installationCost: input.systemCost * 0.25,
+        permittingCost: input.systemCost * 0.15,
+        totalCost: input.systemCost,
+        federalTaxCredit,
+        stateIncentives: 0,
+        netCost,
+        monthlyPayment: netCost / 240,
+        financingTermMonths: 240,
+        estimatedAnnualSavings: input.estimatedAnnualSavings,
+        paybackPeriodYears: input.paybackPeriodYears,
+        roiPercent: input.roiPercent,
+        status: "draft",
+        pdfUrl: htmlContent,
+      });
+    })
 });
 
 // ─── Solar Performance Router ─────────────────────────────────────────────────
@@ -364,4 +481,73 @@ export const solarRouter = router({
   offers: solarOffersRouter,
   performance: solarPerformanceRouter,
   pipeline: solarPipelineRouter,
+});
+
+// ─── Lead Scoring Router ─────────────────────────────────────────────────────
+const solarLeadScoringRouter = router({
+  scoreLead: protectedProcedure
+    .input(
+      z.object({
+        clientId: z.number(),
+        name: z.string(),
+        email: z.string(),
+        phone: z.string(),
+        address: z.string(),
+        annualElectricityCost: z.number(),
+        roofAge: z.number(),
+        roofCondition: z.enum(["excellent", "good", "fair", "poor"]),
+      })
+    )
+    .mutation(async ({ input }) => {
+      return scoreAndQualifyLead({
+        clientId: input.clientId,
+        name: input.name,
+        email: input.email,
+        phone: input.phone,
+        address: input.address,
+        annualElectricityCost: input.annualElectricityCost,
+        roofAge: input.roofAge,
+        roofCondition: input.roofCondition,
+      });
+    }),
+
+  generateFollowUp: protectedProcedure
+    .input(
+      z.object({
+        clientId: z.number(),
+        name: z.string(),
+        email: z.string(),
+        annualElectricityCost: z.number(),
+        leadScore: z.number(),
+        estimatedSavings: z.number(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const email = await generateFollowUpEmail(
+        {
+          clientId: input.clientId,
+          name: input.name,
+          email: input.email,
+          phone: "",
+          address: "",
+          annualElectricityCost: input.annualElectricityCost,
+          roofAge: 0,
+          roofCondition: "good",
+        },
+        input.leadScore,
+        input.estimatedSavings
+      );
+      return { email };
+    }),
+});
+
+// Update main router export
+export const solarRouter = router({
+  clients: solarClientsRouter,
+  sites: solarSitesRouter,
+  calculations: solarCalculationsRouter,
+  offers: solarOffersRouter,
+  performance: solarPerformanceRouter,
+  pipeline: solarPipelineRouter,
+  leads: solarLeadScoringRouter,
 });

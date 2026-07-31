@@ -251,22 +251,22 @@
 - [x] Add /solar route to App.tsx
 
 ### Phase 5: Sales Engineering Automation Engine
-- [ ] Implement PVWatts API integration
-  - [ ] Create PVWatts client wrapper
-  - [ ] Parse and store calculation results
-  - [ ] Estimate annual production
-  - [ ] Calculate capacity factor & performance ratio
-- [ ] Implement Automated Quote Generation
-  - [ ] Calculate system cost based on capacity
-  - [ ] Apply federal tax credit (30% ITC)
-  - [ ] Calculate monthly payment for financing options
-  - [ ] Generate PDF quote document
-  - [ ] Email quote to client
-- [ ] Implement Sales Automation
-  - [ ] Lead scoring based on electricity costs
-  - [ ] Automated follow-up email sequences
-  - [ ] Quote status tracking
-  - [ ] Deal closing automation
+- [x] Implement PVWatts API integration
+  - [x] Create PVWatts client wrapper
+  - [x] Parse and store calculation results
+  - [x] Estimate annual production
+  - [x] Calculate capacity factor & performance ratio
+- [x] Implement Automated Quote Generation
+  - [x] Calculate system cost based on capacity
+  - [x] Apply federal tax credit (30% ITC)
+  - [x] Calculate monthly payment for financing options
+  - [x] Generate PDF quote document
+  - [x] Email quote to client
+- [x] Implement Sales Automation
+  - [x] Lead scoring based on electricity costs
+  - [x] Automated follow-up email sequences
+  - [x] Quote status tracking
+  - [x] Deal closing automation
 - [ ] Implement Performance Monitoring
   - [ ] Real-time production tracking
   - [ ] Alert system for underperformance
