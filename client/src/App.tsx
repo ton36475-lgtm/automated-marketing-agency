@@ -18,6 +18,7 @@ import Analytics from "./pages/Analytics";
 import SettingsPage from "./pages/Settings";
 import IntegrationSettings from "./pages/IntegrationSettings";
 import CeoBoard from "./pages/CeoBoard";
+import { SolarPage } from "./pages/Solar";
 
 function Router() {
   return (
@@ -35,6 +36,7 @@ function Router() {
       <Route path="/settings" component={SettingsPage} />
       <Route path="/integrations" component={IntegrationSettings} />
       <Route path="/ceo-board" component={CeoBoard} />
+      <Route path="/solar" component={SolarPage} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
