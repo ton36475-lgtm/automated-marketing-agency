@@ -180,56 +180,56 @@
 
 ## Phase 11: Vercel AI Gateway Integration - Multi-Model Unified API (v4.0)
 
-### Phase 1: Deep Analysis
+### Phase 11.1: Deep Analysis
 - [ ] Audit all current LLM calls (CEO Engine, Performance Analytics, Cross-System, Agent Engine)
 - [ ] Document LLM usage patterns: models, functions, frequency, token usage
 - [ ] Analyze current invokeLLM implementation and dependencies
 - [ ] Identify all AI-powered features requiring migration
 - [ ] Create LLM usage baseline metrics
 
-### Phase 2: Design & Architecture
+### Phase 11.2: Design & Architecture
 - [ ] Design Vercel AI Gateway integration layer
 - [ ] Create unified LLM client wrapper (OpenAI, Anthropic, Gemini, xAI)
 - [ ] Design model fallback strategy
 - [ ] Plan observability schema for model performance tracking
 - [ ] Design cost tracking and billing structure
 
-### Phase 3: Setup & Configuration
+### Phase 11.3: Setup & Configuration
 - [ ] Set up Vercel AI Gateway account and API key
 - [ ] Configure environment variables for AI Gateway
 - [ ] Create model configuration (OpenAI, Anthropic, Gemini, xAI endpoints)
 - [ ] Set up cost tracking database schema
 - [ ] Create observability logging infrastructure
 
-### Phase 4: Core Migration - Unified LLM Client
+### Phase 11.4: Core Migration - Unified LLM Client
 - [ ] Create unified LLM client (`server/aiGateway/client.ts`)
 - [ ] Implement model selection logic
 - [ ] Add fallback mechanism for provider failures
 - [ ] Create request/response logging for observability
 - [ ] Add cost calculation per request
 
-### Phase 5: System Migration
+### Phase 11.5: System Migration
 - [ ] Migrate CEO Agent Engine to AI Gateway
 - [ ] Migrate Performance Analytics Engine to AI Gateway
 - [ ] Migrate Cross-System Analysis Engine to AI Gateway
 - [ ] Migrate Agent Engine (7 agents) to AI Gateway
 - [ ] Update all tRPC routers to use unified client
 
-### Phase 6: Frontend - Multi-Model Dashboard
+### Phase 11.6: Frontend - Multi-Model Dashboard
 - [ ] Create Model Performance Comparison page
 - [ ] Add real-time observability dashboard
 - [ ] Show token usage per model per task
 - [ ] Display cost comparison across models
 - [ ] Add model selection UI for A/B testing
 
-### Phase 7: Advanced Features
+### Phase 11.7: Advanced Features
 - [ ] Implement intelligent fallback logic
 - [ ] Add cost optimization recommendations
 - [ ] Create model performance benchmarks
 - [ ] Add A/B testing framework for model comparison
 - [ ] Implement caching for repeated queries
 
-### Phase 8: Testing & Documentation
+### Phase 11.8: Testing & Documentation
 - [ ] Write unit tests for AI Gateway client
 - [ ] Write integration tests for all migrated systems
 - [ ] Create API documentation
@@ -241,7 +241,7 @@
 
 ## Phase 12: Solar Engineering Module Integration (v4.1)
 
-### Phase 4: Backend & Frontend Foundation
+### Phase 12.4: Backend & Frontend Foundation
 - [x] Design database schema (6 tables)
 - [x] Create database tables via SQL migration
 - [x] Create query helpers (server/solar.db.ts)
@@ -250,7 +250,7 @@
 - [x] Create Solar dashboard page (client/src/pages/Solar.tsx)
 - [x] Add /solar route to App.tsx
 
-### Phase 5: Sales Engineering Automation Engine
+### Phase 12.5: Sales Engineering Automation Engine
 - [x] Implement PVWatts API integration
   - [x] Create PVWatts client wrapper
   - [x] Parse and store calculation results
@@ -272,7 +272,7 @@
   - [ ] Alert system for underperformance
   - [ ] Monthly performance reports
 
-### Phase 5: Frontend Components
+### Phase 12.5b: Frontend Components
 - [ ] MapView Component
   - [ ] Google Maps integration with proxy auth
   - [ ] Polygon drawing for roof area
@@ -295,7 +295,7 @@
   - [ ] Alert notifications
   - [ ] Monthly reports
 
-### Phase 6: Integration with Marketing Agency
+### Phase 12.6: Integration with Marketing Agency
 - [ ] Connect Solar module to CEO Board
 - [ ] Add Solar metrics to cross-system analysis
 - [ ] Create Solar-specific agents
@@ -311,7 +311,7 @@
   - [ ] Track conversion to quote
   - [ ] Measure ROAS
 
-### Phase 7: Testing & Documentation
+### Phase 12.7: Testing & Documentation
 - [ ] Unit tests for solar.db.ts
 - [ ] Unit tests for solarRouter.ts
 - [ ] Integration tests for PVWatts API
